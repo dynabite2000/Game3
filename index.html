@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Card Guessing Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    
+    h1 {
+      color: #333;
+    }
+    
+    .card {
+      width: 150px;
+      height: 220px;
+      background-color: #f2f2f2;
+      border: 2px solid #333;
+      border-radius: 5px;
+      margin: 20px auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    .card img {
+      max-width: 100%;
+      height: auto;
+    }
+    
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Card Guessing Game</h1>
+
+  <div class="card">
+    <p>Guess the card:</p>
+    <img id="cardImage" src="card_back.jpg" alt="Card Back" />
+    <p id="result"></p>
+    <button onclick="guessCard()">Guess</button>
+  </div>
+
+  <audio id="bgMusic" src="background_music.mp3" autoplay loop></audio>
+
+  <script>
+    var cards = [
+      { name: "Ace of Spades", image: "card_ace_spades.jpg" },
+      { name: "King of Hearts", image: "card_king_hearts.jpg" },
+      { name: "Queen of Diamonds", image: "card_queen_diamonds.jpg" },
+      { name: "Jack of Clubs", image: "card_jack_clubs.jpg" },
+      { name: "10 of Diamonds", image: "card_10_diamonds.jpg" },
+      { name: "9 of Spades", image: "card_9_spades.jpg" },
+      { name: "8 of Hearts", image: "card_8_hearts.jpg" },
+      { name: "7 of Clubs", image: "card_7_clubs.jpg" }
+    ];
+
+    var currentGame = 3; // Number of cards in the current game
+    var consecutiveWins = 0; // Number of consecutive wins by the player
+
+    function startNewGame() {
+      if (consecutiveWins === 3) {
+        if (currentGame < 6) {
+          currentGame++;
+        } else {
+          currentGame = 3;
+        }
+        consecutiveWins = 0;
+        playMusic();
+      }
+      var cardIndex = Math.floor(Math.random() * (cards.length - currentGame));
+      var targetCards = cards.slice(cardIndex, cardIndex + currentGame);
+      var targetCardIndex = Math.floor(Math.random() * currentGame);
+      var targetCard = targetCards[targetCardIndex];
+      cards.splice(cardIndex, currentGame);
+      
+      document.getElementById("cardImage").src = "card_back.jpg";
+      document.getElementById("result").textContent = "";
+      document.getElementById("result").style.display = "none";
+
+      function guessCard() {
+        var guessedCard = prompt("Guess the card:");
+        if (guessedCard && guessedCard.toLowerCase() === targetCard.name.toLowerCase()) {
+          document.getElementById("cardImage").src = targetCard.image;
+          document.getElementById("result").textContent = "Congratulations! You guessed it right!";
+          document.getElementById("result").style.color = "#4CAF50";
+          consecutiveWins++;
+        } else {
+          document.getElementById("result").textContent = "Oops! Wrong guess. The card was " + targetCard.name + ".";
+          document.getElementById("result").style.color = "#f44336";
+          consecutiveWins = 0;
+        }
+        document.getElementById("result").style.display = "block";
+        document.getElementById("result").style.fontWeight = "bold";
+        document.getElementById("result").style.fontSize = "18px";
+        startNewGame();
+      }
+    }
+
+    function playMusic() {
+      var audio = document.getElementById("bgMusic");
+      audio.play();
+    }
+
+    startNewGame();
+  </script>
+</body>
+</html>
 
