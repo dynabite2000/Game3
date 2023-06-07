@@ -1,117 +1,160 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Card Guessing Game</title>
+  <title>Fighting Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    
-    h1 {
-      color: #333;
-    }
-    
-    .card {
-      width: 150px;
-      height: 220px;
       background-color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .game-container {
+      position: relative;
+      width: 400px;
+      height: 400px;
       border: 2px solid #333;
-      border-radius: 5px;
-      margin: 20px auto;
-      padding: 20px;
-      box-sizing: border-box;
+      background-color: #fff;
     }
-    
-    .card img {
-      max-width: 100%;
-      height: auto;
+
+    .character {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: #333;
+      transition: 0.2s;
     }
-    
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
+
+    #player1 {
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+    }
+
+    #player2 {
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
     }
   </style>
 </head>
 <body>
-  <h1>Card Guessing Game</h1>
-
-  <div class="card">
-    <p>Guess the card:</p>
-    <img id="cardImage" src="card_back.jpg" alt="Card Back" />
-    <p id="result"></p>
-    <button onclick="guessCard()">Guess</button>
+  <div class="game-container">
+    <div id="player1" class="character"></div>
+    <div id="player2" class="character"></div>
   </div>
 
-  <audio id="bgMusic" src="background_music.mp3" autoplay loop></audio>
-
   <script>
-    var cards = [
-      { name: "Ace of Spades", image: "card_ace_spades.jpg" },
-      { name: "King of Hearts", image: "card_king_hearts.jpg" },
-      { name: "Queen of Diamonds", image: "card_queen_diamonds.jpg" },
-      { name: "Jack of Clubs", image: "card_jack_clubs.jpg" },
-      { name: "10 of Diamonds", image: "card_10_diamonds.jpg" },
-      { name: "9 of Spades", image: "card_9_spades.jpg" },
-      { name: "8 of Hearts", image: "card_8_hearts.jpg" },
-      { name: "7 of Clubs", image: "card_7_clubs.jpg" }
-    ];
+    var player1 = document.getElementById("player1");
+    var player2 = document.getElementById("player2");
+    var stepSize = 10;
 
-    var currentGame = 3; // Number of cards in the current game
-    var consecutiveWins = 0; // Number of consecutive wins by the player
+    // Keyboard Controls
+    document.addEventListener("keydown", function(event) {
+      moveCharacter(event.keyCode);
+    });
 
-    function startNewGame() {
-      if (consecutiveWins === 3) {
-        if (currentGame < 6) {
-          currentGame++;
-        } else {
-          currentGame = 3;
-        }
-        consecutiveWins = 0;
-        playMusic();
+    function moveCharacter(keyCode) {
+      // Player 1 Movement
+      if (keyCode === 87) {
+        // W key - move up
+        moveUp(player1, stepSize);
+      } else if (keyCode === 83) {
+        // S key - move down
+        moveDown(player1, stepSize);
+      } else if (keyCode === 65) {
+        // A key - move left
+        moveLeft(player1, stepSize);
+      } else if (keyCode === 68) {
+        // D key - move right
+        moveRight(player1, stepSize);
       }
-      var cardIndex = Math.floor(Math.random() * (cards.length - currentGame));
-      var targetCards = cards.slice(cardIndex, cardIndex + currentGame);
-      var targetCardIndex = Math.floor(Math.random() * currentGame);
-      var targetCard = targetCards[targetCardIndex];
-      cards.splice(cardIndex, currentGame);
-      
-      document.getElementById("cardImage").src = "card_back.jpg";
-      document.getElementById("result").textContent = "";
-      document.getElementById("result").style.display = "none";
 
-      function guessCard() {
-        var guessedCard = prompt("Guess the card:");
-        if (guessedCard && guessedCard.toLowerCase() === targetCard.name.toLowerCase()) {
-          document.getElementById("cardImage").src = targetCard.image;
-          document.getElementById("result").textContent = "Congratulations! You guessed it right!";
-          document.getElementById("result").style.color = "#4CAF50";
-          consecutiveWins++;
-        } else {
-          document.getElementById("result").textContent = "Oops! Wrong guess. The card was " + targetCard.name + ".";
-          document.getElementById("result").style.color = "#f44336";
-          consecutiveWins = 0;
-        }
-        document.getElementById("result").style.display = "block";
-        document.getElementById("result").style.fontWeight = "bold";
-        document.getElementById("result").style.fontSize = "18px";
-        startNewGame();
+      // Player 2 Movement
+      if (keyCode === 38) {
+        // Up arrow key - move up
+        moveUp(player2, stepSize);
+      } else if (keyCode === 40) {
+        // Down arrow key - move down
+        moveDown(player2, stepSize);
+      } else if (keyCode === 37) {
+        // Left arrow key - move left
+        moveLeft(player2, stepSize);
+      } else if (keyCode === 39) {
+        // Right arrow key - move right
+        moveRight(player2, stepSize);
       }
     }
 
-    function playMusic() {
-      var audio = document.getElementById("bgMusic");
-      audio.play();
+    // Touch Screen Controls
+    var touchControls = document.getElementById("touch-controls");
+    var touchStartPos = null;
+
+    touchControls.addEventListener("touchstart", function(event) {
+      event.preventDefault();
+      touchStartPos = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY
+      };
+    });
+
+    touchControls.addEventListener("touchend", function(event) {
+      event.preventDefault();
+      var touchEndPos = {
+        x: event.changedTouches[0].clientX,
+        y: event.changedTouches[0].clientY
+      };
+      var direction = getSwipeDirection(touchStartPos, touchEndPos);
+
+      if (direction === "up") {
+        moveUp(player1, stepSize);
+      } else if (direction === "down") {
+        moveDown(player1, stepSize);
+      } else if (direction === "left") {
+        moveLeft(player1, stepSize);
+      } else if (direction === "right") {
+        moveRight(player1, stepSize);
+      }
+    });
+
+    function getSwipeDirection(startPos, endPos) {
+      var deltaX = endPos.x - startPos.x;
+      var deltaY = endPos.y - startPos.y;
+      var absDeltaX = Math.abs(deltaX);
+      var absDeltaY = Math.abs(deltaY);
+      var direction = "";
+
+      if (absDeltaX > absDeltaY) {
+        direction = deltaX > 0 ? "right" : "left";
+      } else {
+        direction = deltaY > 0 ? "down" : "up";
+      }
+
+      return direction;
     }
 
-    startNewGame();
+    function moveUp(element, stepSize) {
+      var topPos = parseInt(element.style.top) - stepSize;
+      element.style.top = topPos + "px";
+    }
+
+    function moveDown(element, stepSize) {
+      var topPos = parseInt(element.style.top) + stepSize;
+      element.style.top = topPos + "px";
+    }
+
+    function moveLeft(element, stepSize) {
+      var leftPos = parseInt(element.style.left) - stepSize;
+      element.style.left = leftPos + "px";
+    }
+
+    function moveRight(element, stepSize) {
+      var leftPos = parseInt(element.style.left) + stepSize;
+      element.style.left = leftPos + "px";
+    }
   </script>
 </body>
 </html>
-
