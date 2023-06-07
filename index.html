@@ -39,121 +39,209 @@
       right: 10px;
       transform: translateY(-50%);
     }
+
+    .health-bar-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 120px;
+      height: 20px;
+      background-color: #ddd;
+    }
+
+    .health-bar {
+      height: 100%;
+      background-color: #66bb6a;
+    }
+
+    .starting-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: #fff;
+      z-index: 999;
+    }
+
+    .starting-screen label {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .starting-screen input[type="color"] {
+      width: 50px;
+      height: 50px;
+    }
+
+    .starting-screen button {
+      padding: 10px 20px;
+      background-color: #2196f3;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="game-container">
     <div id="player1" class="character"></div>
     <div id="player2" class="character"></div>
+    <div class="health-bar-container">
+      <div id="player1-health" class="health-bar"></div>
+    </div>
+    <div class="health-bar-container" style="top: 40px;">
+      <div id="player2-health" class="health-bar"></div>
+    </div>
+  </div>
+
+  <div id="starting-screen" class="starting-screen">
+    <label for="color-picker">Choose Screen Color:</label>
+    <input type="color" id="color-picker">
+    <button id="start-button">Start Game</button>
   </div>
 
   <script>
     var player1 = document.getElementById("player1");
     var player2 = document.getElementById("player2");
+    var player1HealthBar = document.getElementById("player1-health");
+    var player2HealthBar = document.getElementById("player2-health");
     var stepSize = 10;
 
-    // Keyboard Controls
-    document.addEventListener("keydown", function(event) {
-      moveCharacter(event.keyCode);
+    var colorPicker = document.getElementById("color-picker");
+    var startButton = document.getElementById("start-button");
+    var startingScreen = document.getElementById("starting-screen");
+    var gameContainer = document.querySelector(".game-container");
+
+    // Set initial screen color
+    var screenColor = "#f2f2f2";
+    document.body.style.backgroundColor = screenColor;
+
+    // Handle color selection
+    colorPicker.addEventListener("input", function(event) {
+      screenColor = event.target.value;
+      document.body.style.backgroundColor = screenColor;
     });
 
-    function moveCharacter(keyCode) {
-      // Player 1 Movement
-      if (keyCode === 87) {
-        // W key - move up
-        moveUp(player1, stepSize);
-      } else if (keyCode === 83) {
-        // S key - move down
-        moveDown(player1, stepSize);
-      } else if (keyCode === 65) {
-        // A key - move left
-        moveLeft(player1, stepSize);
-      } else if (keyCode === 68) {
-        // D key - move right
-        moveRight(player1, stepSize);
-      }
-
-      // Player 2 Movement
-      if (keyCode === 38) {
-        // Up arrow key - move up
-        moveUp(player2, stepSize);
-      } else if (keyCode === 40) {
-        // Down arrow key - move down
-        moveDown(player2, stepSize);
-      } else if (keyCode === 37) {
-        // Left arrow key - move left
-        moveLeft(player2, stepSize);
-      } else if (keyCode === 39) {
-        // Right arrow key - move right
-        moveRight(player2, stepSize);
-      }
-    }
-
-    // Touch Screen Controls
-    var touchControls = document.getElementById("touch-controls");
-    var touchStartPos = null;
-
-    touchControls.addEventListener("touchstart", function(event) {
-      event.preventDefault();
-      touchStartPos = {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY
-      };
+    // Start the game
+    startButton.addEventListener("click", function() {
+      startingScreen.style.display = "none";
+      gameContainer.style.display = "block";
+      initializeGame();
     });
 
-    touchControls.addEventListener("touchend", function(event) {
-      event.preventDefault();
-      var touchEndPos = {
-        x: event.changedTouches[0].clientX,
-        y: event.changedTouches[0].clientY
-      };
-      var direction = getSwipeDirection(touchStartPos, touchEndPos);
+    function initializeGame() {
+      // Keyboard Controls
+      document.addEventListener("keydown", function(event) {
+        moveCharacter(event.keyCode);
+      });
 
-      if (direction === "up") {
-        moveUp(player1, stepSize);
-      } else if (direction === "down") {
-        moveDown(player1, stepSize);
-      } else if (direction === "left") {
-        moveLeft(player1, stepSize);
-      } else if (direction === "right") {
-        moveRight(player1, stepSize);
+      // Touch Screen Controls
+      var touchControls = document.createElement("div");
+      touchControls.id = "touch-controls";
+      touchControls.innerHTML = `
+        <button class="control-button" data-direction="up">&uarr;</button>
+        <button class="control-button" data-direction="down">&darr;</button>
+        <button class="control-button" data-direction="left">&larr;</button>
+        <button class="control-button" data-direction="right">&rarr;</button>
+      `;
+      gameContainer.appendChild(touchControls);
+
+      var controlButtons = document.querySelectorAll(".control-button");
+      controlButtons.forEach(function(button) {
+        button.addEventListener("touchstart", function(event) {
+          event.preventDefault();
+          var direction = button.dataset.direction;
+          handleTouchMovement(direction);
+        });
+
+        button.addEventListener("touchend", function(event) {
+          event.preventDefault();
+          stopMovement();
+        });
+      });
+
+      // Game Logic
+      var player1Health = 100;
+      var player2Health = 100;
+      updateHealthBar(player1HealthBar, player1Health);
+      updateHealthBar(player2HealthBar, player2Health);
+
+      function moveCharacter(keyCode) {
+        // Player 1 Movement
+        if (keyCode === 87) {
+          // W key - move up
+          moveUp(player1, stepSize);
+        } else if (keyCode === 83) {
+          // S key - move down
+          moveDown(player1, stepSize);
+        } else if (keyCode === 65) {
+          // A key - move left
+          moveLeft(player1, stepSize);
+        } else if (keyCode === 68) {
+          // D key - move right
+          moveRight(player1, stepSize);
+        }
+
+        // Player 2 Movement (AI Opponent)
+        // Example AI behavior: Moves randomly in a square pattern
+        var randomDirection = Math.floor(Math.random() * 4);
+        if (randomDirection === 0) {
+          moveUp(player2, stepSize);
+        } else if (randomDirection === 1) {
+          moveDown(player2, stepSize);
+        } else if (randomDirection === 2) {
+          moveLeft(player2, stepSize);
+        } else if (randomDirection === 3) {
+          moveRight(player2, stepSize);
+        }
       }
-    });
 
-    function getSwipeDirection(startPos, endPos) {
-      var deltaX = endPos.x - startPos.x;
-      var deltaY = endPos.y - startPos.y;
-      var absDeltaX = Math.abs(deltaX);
-      var absDeltaY = Math.abs(deltaY);
-      var direction = "";
-
-      if (absDeltaX > absDeltaY) {
-        direction = deltaX > 0 ? "right" : "left";
-      } else {
-        direction = deltaY > 0 ? "down" : "up";
+      function handleTouchMovement(direction) {
+        if (direction === "up") {
+          moveUp(player1, stepSize);
+        } else if (direction === "down") {
+          moveDown(player1, stepSize);
+        } else if (direction === "left") {
+          moveLeft(player1, stepSize);
+        } else if (direction === "right") {
+          moveRight(player1, stepSize);
+        }
       }
 
-      return direction;
-    }
+      function stopMovement() {
+        // Stop player1 movement
+      }
 
-    function moveUp(element, stepSize) {
-      var topPos = parseInt(element.style.top) - stepSize;
-      element.style.top = topPos + "px";
-    }
+      function moveUp(element, stepSize) {
+        var topPos = parseInt(element.style.top) - stepSize;
+        element.style.top = topPos + "px";
+      }
 
-    function moveDown(element, stepSize) {
-      var topPos = parseInt(element.style.top) + stepSize;
-      element.style.top = topPos + "px";
-    }
+      function moveDown(element, stepSize) {
+        var topPos = parseInt(element.style.top) + stepSize;
+        element.style.top = topPos + "px";
+      }
 
-    function moveLeft(element, stepSize) {
-      var leftPos = parseInt(element.style.left) - stepSize;
-      element.style.left = leftPos + "px";
-    }
+      function moveLeft(element, stepSize) {
+        var leftPos = parseInt(element.style.left) - stepSize;
+        element.style.left = leftPos + "px";
+      }
 
-    function moveRight(element, stepSize) {
-      var leftPos = parseInt(element.style.left) + stepSize;
-      element.style.left = leftPos + "px";
+      function moveRight(element, stepSize) {
+        var leftPos = parseInt(element.style.left) + stepSize;
+        element.style.left = leftPos + "px";
+      }
+
+      function updateHealthBar(healthBar, health) {
+        healthBar.style.width = health + "%";
+      }
     }
   </script>
 </body>
