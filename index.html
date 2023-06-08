@@ -109,4 +109,66 @@
     // Start Game
     function startGame() {
       gameStarted = true;
+      document.querySelector(".start-game").style.display = "none";
+    }
 
+    // Hide Rules
+    function hideRules() {
+      document.getElementById("rules-container").style.display = "none";
+    }
+
+    // Keyboard Controls
+    document.addEventListener("keydown", function(event) {
+      if (gameStarted) {
+        moveCharacter(event.keyCode);
+      }
+    });
+
+    // Touch Screen Controls
+    var touchButtons = document.querySelectorAll(".touch-button");
+
+    touchButtons.forEach(function(button) {
+      button.ontouchstart = function(event) {
+        event.preventDefault();
+        if (gameStarted) {
+          var direction = button.getAttribute("data-direction");
+          moveCharacter(direction);
+        }
+      };
+    });
+
+    function moveCharacter(direction) {
+      // Player 1 Movement (Arrow Keys)
+      if (direction === "up") {
+        moveUp(player1, stepSize);
+      } else if (direction === "down") {
+        moveDown(player1, stepSize);
+      } else if (direction === "left") {
+        moveLeft(player1, stepSize);
+      } else if (direction === "right") {
+        moveRight(player1, stepSize);
+      }
+    }
+
+    function moveUp(element, stepSize) {
+      var topPos = parseInt(element.style.top) - stepSize;
+      element.style.top = topPos + "px";
+    }
+
+    function moveDown(element, stepSize) {
+      var topPos = parseInt(element.style.top) + stepSize;
+      element.style.top = topPos + "px";
+    }
+
+    function moveLeft(element, stepSize) {
+      var leftPos = parseInt(element.style.left) - stepSize;
+      element.style.left = leftPos + "px";
+    }
+
+    function moveRight(element, stepSize) {
+      var leftPos = parseInt(element.style.left) + stepSize;
+      element.style.left = leftPos + "px";
+    }
+  </script>
+</body>
+</html>
