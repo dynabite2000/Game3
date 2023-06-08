@@ -19,7 +19,6 @@
       position: absolute;
       width: 40px;
       height: 40px;
-      background-color: #333;
       transition: 0.2s;
     }
 
@@ -52,6 +51,33 @@
       font-weight: bold;
       cursor: pointer;
     }
+
+    /* Color picker styles */
+    .color-picker {
+      margin-top: 20px;
+    }
+
+    .color-picker input {
+      width: 100%;
+      height: 30px;
+      margin-top: 5px;
+    }
+
+    /* Game over screen styles */
+    .game-over-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: red;
+      font-size: 36px;
+    }
   </style>
 </head>
 <body>
@@ -60,6 +86,7 @@
   </div>
 
   <div class="touch-controls">
+    <!-- Touch buttons -->
     <div class="touch-button" id="move-up">&#x25B2;</div>
     <div class="touch-button" id="move-left">&#x25C0;</div>
     <div class="touch-button" id="move-right">&#x25B6;</div>
@@ -70,70 +97,76 @@
     <div class="touch-button" id="move-down-right">&#x2198;</div>
   </div>
 
+  <div class="color-picker">
+    <label for="player-color">Player 1 Color:</label>
+    <input type="color" id="player-color">
+  </div>
+
+  <div class="game-over-screen" id="game-over-screen">
+    <p id="game-over-text">Game Over</p>
+    <button id="restart-button">Restart</button>
+  </div>
+
   <script>
-    // JavaScript code for player movement and touchscreen controls
     var player1 = document.getElementById("player1");
     var stepSize = 10;
+    var gameContainer = document.querySelector(".game-container");
+    var touchButtons = document.querySelectorAll(".touch-button");
+    var gameOverScreen = document.getElementById("game-over-screen");
+    var gameOverText = document.getElementById("game-over-text");
+    var restartButton = document.getElementById("restart-button");
 
-    // Touchscreen controls
-    var moveUpButton = document.getElementById("move-up");
-    var moveLeftButton = document.getElementById("move-left");
-    var moveRightButton = document.getElementById("move-right");
-    var moveDownButton = document.getElementById("move-down");
-    var moveUpLeftButton = document.getElementById("move-up-left");
-    var moveUpRightButton = document.getElementById("move-up-right");
-    var moveDownLeftButton = document.getElementById("move-down-left");
-    var moveDownRightButton = document.getElementById("move-down-right");
+    // Set initial game state
+    var isGameOver = false;
 
-    moveUpButton.addEventListener("click", function() {
-      moveUp(player1, stepSize);
+    // Keyboard Controls
+    document.addEventListener("keydown", function(event) {
+      moveCharacter(event.keyCode);
     });
 
-    moveLeftButton.addEventListener("click", function() {
-      moveLeft(player1, stepSize);
+    // Touchscreen Controls
+    touchButtons.forEach(function(button) {
+      button.addEventListener("touchstart", function(event) {
+        event.preventDefault();
+        var direction = button.getAttribute("data-direction");
+        moveCharacter(direction);
+      });
     });
 
-    moveRightButton.addEventListener("click", function() {
-      moveRight(player1, stepSize);
+    // Color picker
+    var colorPicker = document.getElementById("player-color");
+    colorPicker.addEventListener("input", function() {
+      changePlayerColor(player1, colorPicker.value);
     });
 
-    moveDownButton.addEventListener("click", function() {
-      moveDown(player1, stepSize);
+    // Restart button
+    restartButton.addEventListener("click", function() {
+      resetGame();
     });
 
-    moveUpLeftButton.addEventListener("click", function() {
-      moveDiagonal("up-left");
-    });
-
-    moveUpRightButton.addEventListener("click", function() {
-      moveDiagonal("up-right");
-    });
-
-    moveDownLeftButton.addEventListener("click", function() {
-      moveDiagonal("down-left");
-    });
-
-    moveDownRightButton.addEventListener("click", function() {
-      moveDiagonal("down-right");
-    });
-
-    function moveDiagonal(direction) {
-      if (direction === "up-left") {
-        moveUp(player1, stepSize);
-        moveLeft(player1, stepSize);
-      } else if (direction === "up-right") {
-        moveUp(player1, stepSize);
-        moveRight(player1, stepSize);
-      } else if (direction === "down-left") {
-        moveDown(player1, stepSize);
-        moveLeft(player1, stepSize);
-      } else if (direction === "down-right") {
-        moveDown(player1, stepSize);
-        moveRight(player1, stepSize);
+    function moveCharacter(direction) {
+      if (!isGameOver) {
+        // Player 1 Movement
+        if (direction === "up") {
+          moveUp(player1, stepSize);
+        } else if (direction === "down") {
+          moveDown(player1, stepSize);
+        } else if (direction === "left") {
+          moveLeft(player1, stepSize);
+        } else if (direction === "right") {
+          moveRight(player1, stepSize);
+        } else if (direction === "up-left") {
+          moveUpLeft(player1, stepSize);
+        } else if (direction === "up-right") {
+          moveUpRight(player1, stepSize);
+        } else if (direction === "down-left") {
+          moveDownLeft(player1, stepSize);
+        } else if (direction === "down-right") {
+          moveDownRight(player1, stepSize);
+        }
       }
     }
 
-    // Movement functions
     function moveUp(element, stepSize) {
       var topPos = parseInt(element.style.top) - stepSize;
       element.style.top = topPos + "px";
@@ -153,6 +186,77 @@
       var leftPos = parseInt(element.style.left) + stepSize;
       element.style.left = leftPos + "px";
     }
+
+    function moveUpLeft(element, stepSize) {
+      var topPos = parseInt(element.style.top) - stepSize;
+      var leftPos = parseInt(element.style.left) - stepSize;
+      element.style.top = topPos + "px";
+      element.style.left = leftPos + "px";
+    }
+
+    function moveUpRight(element, stepSize) {
+      var topPos = parseInt(element.style.top) - stepSize;
+      var leftPos = parseInt(element.style.left) + stepSize;
+      element.style.top = topPos + "px";
+      element.style.left = leftPos + "px";
+    }
+
+    function moveDownLeft(element, stepSize) {
+      var topPos = parseInt(element.style.top) + stepSize;
+      var leftPos = parseInt(element.style.left) - stepSize;
+      element.style.top = topPos + "px";
+      element.style.left = leftPos + "px";
+    }
+
+    function moveDownRight(element, stepSize) {
+      var topPos = parseInt(element.style.top) + stepSize;
+      var leftPos = parseInt(element.style.left) + stepSize;
+      element.style.top = topPos + "px";
+      element.style.left = leftPos + "px";
+    }
+
+    function changePlayerColor(element, color) {
+      element.style.backgroundColor = color;
+    }
+
+    function resetGame() {
+      // Reset player positions
+      player1.style.top = "50%";
+      player1.style.left = "10px";
+
+      // Reset player colors
+      changePlayerColor(player1, colorPicker.value);
+
+      // Hide game over screen
+      gameOverScreen.style.display = "none";
+
+      // Reset game state
+      isGameOver = false;
+    }
+
+    function showGameOverScreen() {
+      gameOverText.style.color = "red";
+      gameOverScreen.style.display = "flex";
+      isGameOver = true;
+    }
+
+    // Collision detection
+    function checkCollision() {
+      var player1Rect = player1.getBoundingClientRect();
+      var gameContainerRect = gameContainer.getBoundingClientRect();
+
+      if (
+        player1Rect.right >= gameContainerRect.right ||
+        player1Rect.left <= gameContainerRect.left ||
+        player1Rect.top <= gameContainerRect.top ||
+        player1Rect.bottom >= gameContainerRect.bottom
+      ) {
+        showGameOverScreen();
+      }
+    }
+
+    // Game loop
+    setInterval(checkCollision, 10);
   </script>
 </body>
 </html>
