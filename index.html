@@ -128,6 +128,8 @@
   </div>
 
   <script>
+    // JavaScript Code
+
     var player1 = document.getElementById("player1");
     var player2 = document.getElementById("player2");
     var stepSize = 10;
@@ -138,12 +140,12 @@
       gameStarted = true;
       document.querySelector(".start-game").style.display = "none";
       document.getElementById("rules-container").style.display = "block";
+      showTouchControls();
     }
 
     // Hide Rules
     function hideRules() {
       document.getElementById("rules-container").style.display = "none";
-      showTouchControls();
     }
 
     // Show Touch Controls
@@ -162,17 +164,17 @@
     var touchButtons = document.querySelectorAll(".touch-button");
 
     touchButtons.forEach(function(button) {
-      button.ontouchstart = function(event) {
+      button.addEventListener("touchstart", function(event) {
         event.preventDefault();
         if (gameStarted) {
           var direction = button.getAttribute("data-direction");
           moveCharacter(direction);
         }
-      };
+      });
     });
 
     function moveCharacter(direction) {
-      // Player 1 Movement (Arrow Keys)
+      // Player 1 Movement (Swipe Controls)
       if (direction === "up") {
         moveUp(player1, stepSize);
       } else if (direction === "down") {
@@ -206,4 +208,3 @@
   </script>
 </body>
 </html>
- 
