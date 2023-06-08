@@ -92,7 +92,7 @@
   <div id="rules-container" class="rules-container">
     <h2>How to Play</h2>
     <p>Player 1 (Left Square) Controls:</p>
-    <p>Use the arrow buttons to move.</p>
+    <p>Swipe up, down, left, or right to move.</p>
     <p>Player 2 (Right Square) Controls:</p>
     <p>Use the W, A, S, D keys to move.</p>
     <p>Avoid colliding with the other square.</p>
@@ -109,12 +109,7 @@
     // Start Game
     function startGame() {
       gameStarted = true;
-      document.getElementById("rules-container").style.display = "none";
-    }
-
-    // Show Rules
-    function showRules() {
-      document.getElementById("rules-container").style.display = "block";
+      document.querySelector(".start-game").style.display = "none";
     }
 
     // Hide Rules
@@ -133,7 +128,8 @@
     var touchButtons = document.querySelectorAll(".touch-button");
 
     touchButtons.forEach(function(button) {
-      button.ontouchstart = function() {
+      button.ontouchstart = function(event) {
+        event.preventDefault();
         if (gameStarted) {
           var direction = button.getAttribute("data-direction");
           moveCharacter(direction);
@@ -176,4 +172,3 @@
   </script>
 </body>
 </html>
-     
