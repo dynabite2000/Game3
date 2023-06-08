@@ -4,12 +4,15 @@
   <title>Fighting Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* CSS Styles */
+
     body {
       background-color: #f2f2f2;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      font-family: Arial, sans-serif;
     }
 
     .game-container {
@@ -40,85 +43,61 @@
       transform: translateY(-50%);
     }
 
-    .touch-controls {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-    }
-
-    .touch-button {
-      width: 40px;
-      height: 40px;
-      margin: 0 5px;
-      background-color: #ccc;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 20px;
-      color: #333;
+    .start-game {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
     }
 
-    .start-game {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-    }
-
-    .rules-window {
-      position: absolute;
+    .rules-container {
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       width: 300px;
-      height: 300px;
+      padding: 20px;
       background-color: #fff;
       border: 2px solid #333;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       text-align: center;
-      font-size: 18px;
-      color: #333;
+      z-index: 999;
     }
 
-    .close-button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    .rules-container h2 {
+      font-size: 24px;
+      margin-top: 0;
+    }
+
+    .rules-container p {
+      font-size: 16px;
+      line-height: 1.4;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <button class="start-game" onclick="startGame()">Start Game</button>
-
   <div class="game-container">
     <div id="player1" class="character"></div>
     <div id="player2" class="character"></div>
   </div>
 
-  <div class="touch-controls">
-    <div class="touch-button" data-direction="up">↑</div>
-    <div class="touch-button" data-direction="down">↓</div>
-    <div class="touch-button" data-direction="left">←</div>
-    <div class="touch-button" data-direction="right">→</div>
-  </div>
+  <button class="start-game" onclick="startGame()" ontouchstart="startGame()">Start Game</button>
 
-  <div class="rules-window" id="rulesWindow">
+  <div id="rules-container" class="rules-container">
     <h2>How to Play</h2>
-    <p>Use the arrow buttons or touch controls to move Player 1.</p>
-    <p>Player 2 (AI) will move randomly.</p>
-    <p>Avoid collision with Player 2 to win.</p>
-    <button class="close-button" onclick="closeRules()">Close</button>
+    <p>Player 1 (Left Square) Controls:</p>
+    <p>Use the arrow buttons to move.</p>
+    <p>Player 2 (Right Square) Controls:</p>
+    <p>Use the W, A, S, D keys to move.</p>
+    <p>Avoid colliding with the other square.</p>
+    <p>The square that touches the boundary loses.</p>
+    <button onclick="hideRules()">Got It!</button>
   </div>
 
   <script>
@@ -126,6 +105,22 @@
     var player2 = document.getElementById("player2");
     var stepSize = 10;
     var gameStarted = false;
+
+    // Start Game
+    function startGame() {
+      gameStarted = true;
+      document.getElementById("rules-container").style.display = "none";
+    }
+
+    // Show Rules
+    function showRules() {
+      document.getElementById("rules-container").style.display = "block";
+    }
+
+    // Hide Rules
+    function hideRules() {
+      document.getElementById("rules-container").style.display = "none";
+    }
 
     // Keyboard Controls
     document.addEventListener("keydown", function(event) {
@@ -136,23 +131,18 @@
 
     // Touch Screen Controls
     var touchButtons = document.querySelectorAll(".touch-button");
+
     touchButtons.forEach(function(button) {
-      button.addEventListener("click", function() {
+      button.ontouchstart = function() {
         if (gameStarted) {
           var direction = button.getAttribute("data-direction");
           moveCharacter(direction);
         }
-      });
+      };
     });
 
-    // Start Game
-    function startGame() {
-      gameStarted = true;
-      document.querySelector(".start-game").style.display = "none";
-    }
-
-    // Move Player 1
     function moveCharacter(direction) {
+      // Player 1 Movement (Arrow Keys)
       if (direction === "up") {
         moveUp(player1, stepSize);
       } else if (direction === "down") {
@@ -164,71 +154,26 @@
       }
     }
 
-    // AI Movement
-    function moveCharacterAI(element, stepSize) {
-      var direction = getRandomDirection();
-      if (direction === "up") {
-        moveUp(element, stepSize);
-      } else if (direction === "down") {
-        moveDown(element, stepSize);
-      } else if (direction === "left") {
-        moveLeft(element, stepSize);
-      } else if (direction === "right") {
-        moveRight(element, stepSize);
-      }
+    function moveUp(element, stepSize) {
+      var topPos = parseInt(element.style.top) - stepSize;
+      element.style.top = topPos + "px";
     }
 
-    // Random Direction for AI Movement
-    function getRandomDirection() {
-      var directions = ["up", "down", "left", "right"];
-      var randomIndex = Math.floor(Math.random() * directions.length);
-      return directions[randomIndex];
+    function moveDown(element, stepSize) {
+      var topPos = parseInt(element.style.top) + stepSize;
+      element.style.top = topPos + "px";
     }
 
-    // Collision Detection
-    function checkCollision() {
-      var player1Rect = player1.getBoundingClientRect();
-      var player2Rect = player2.getBoundingClientRect();
-
-      if (
-        player1Rect.left < player2Rect.right &&
-        player1Rect.right > player2Rect.left &&
-        player1Rect.top < player2Rect.bottom &&
-        player1Rect.bottom > player2Rect.top
-      ) {
-        gameOver();
-      }
+    function moveLeft(element, stepSize) {
+      var leftPos = parseInt(element.style.left) - stepSize;
+      element.style.left = leftPos + "px";
     }
 
-    // Game Over
-    function gameOver() {
-      gameStarted = false;
-      alert("Game Over");
+    function moveRight(element, stepSize) {
+      var leftPos = parseInt(element.style.left) + stepSize;
+      element.style.left = leftPos + "px";
     }
-
-    // Game Loop
-    function gameLoop() {
-      if (gameStarted) {
-        moveCharacterAI(player2, stepSize);
-        checkCollision();
-        requestAnimationFrame(gameLoop);
-      }
-    }
-
-    // Open Rules Window
-    function openRules() {
-      document.getElementById("rulesWindow").style.display = "block";
-    }
-
-    // Close Rules Window
-    function closeRules() {
-      document.getElementById("rulesWindow").style.display = "none";
-    }
-
-    // Start the Game Loop
-    gameLoop();
   </script>
 </body>
 </html>
-
-
+     
