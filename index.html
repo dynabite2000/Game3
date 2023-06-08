@@ -4,93 +4,136 @@
   <title>Fighting Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Your existing CSS styles */
-
-    /* Pop-out explanation */
-    #explanation {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(255, 0, 0, 0.8);
-      color: #fff;
-      padding: 20px;
-      font-size: 24px;
-      border-radius: 5px;
-      display: none;
+    /* Game container styles */
+    .game-container {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      border: 2px solid #333;
+      background-color: #fff;
+      margin: 0 auto;
     }
 
-    /* Button styles */
-    .button {
-      padding: 10px 20px;
-      font-size: 18px;
+    /* Character styles */
+    .character {
+      position: absolute;
+      width: 40px;
+      height: 40px;
       background-color: #333;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      transition: 0.2s;
     }
 
-    .button:hover {
-      background-color: #555;
+    /* Player 1 styles */
+    #player1 {
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+    }
+
+    /* Touchscreen controls styles */
+    .touch-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .touch-button {
+      width: 70px;
+      height: 70px;
+      background-color: #ADD8E6;
+      border-radius: 50%;
+      margin: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="game-container">
     <div id="player1" class="character"></div>
-    <div id="player2" class="character"></div>
   </div>
 
-  <!-- Pop-out explanation -->
-  <div id="explanation">
-    <p>Instructions: Defeat your opponent by reducing their health to 0.</p>
-    <p>Player 1 Controls: W, A, S, D (or touch screen)</p>
-    <p>Player 2 Controls: Arrow Keys (AI controlled)</p>
-    <button class="button" id="dismiss-button">Dismiss</button>
+  <div class="touch-controls">
+    <div class="touch-button" id="move-up">&#x25B2;</div>
+    <div class="touch-button" id="move-left">&#x25C0;</div>
+    <div class="touch-button" id="move-right">&#x25B6;</div>
+    <div class="touch-button" id="move-down">&#x25BC;</div>
+    <div class="touch-button" id="move-up-left">&#x2196;</div>
+    <div class="touch-button" id="move-up-right">&#x2197;</div>
+    <div class="touch-button" id="move-down-left">&#x2199;</div>
+    <div class="touch-button" id="move-down-right">&#x2198;</div>
   </div>
 
   <script>
-    // Show the pop-out explanation after 30 seconds
-    setTimeout(function() {
-      var explanation = document.getElementById("explanation");
-      explanation.style.display = "block";
-    }, 30000);
-
-    // Dismiss the pop-out explanation when the dismiss button is clicked
-    var dismissButton = document.getElementById("dismiss-button");
-    dismissButton.addEventListener("click", function() {
-      var explanation = document.getElementById("explanation");
-      explanation.parentNode.removeChild(explanation);
-    });
-
-    // Your existing game logic
+    // JavaScript code for player movement and touchscreen controls
     var player1 = document.getElementById("player1");
-    var player2 = document.getElementById("player2");
     var stepSize = 10;
 
-    // Keyboard Controls
-    document.addEventListener("keydown", function(event) {
-      moveCharacter(event.keyCode);
+    // Touchscreen controls
+    var moveUpButton = document.getElementById("move-up");
+    var moveLeftButton = document.getElementById("move-left");
+    var moveRightButton = document.getElementById("move-right");
+    var moveDownButton = document.getElementById("move-down");
+    var moveUpLeftButton = document.getElementById("move-up-left");
+    var moveUpRightButton = document.getElementById("move-up-right");
+    var moveDownLeftButton = document.getElementById("move-down-left");
+    var moveDownRightButton = document.getElementById("move-down-right");
+
+    moveUpButton.addEventListener("click", function() {
+      moveUp(player1, stepSize);
     });
 
-    function moveCharacter(keyCode) {
-      // Player 1 Movement
-      if (keyCode === 87) {
-        // W key - move up
+    moveLeftButton.addEventListener("click", function() {
+      moveLeft(player1, stepSize);
+    });
+
+    moveRightButton.addEventListener("click", function() {
+      moveRight(player1, stepSize);
+    });
+
+    moveDownButton.addEventListener("click", function() {
+      moveDown(player1, stepSize);
+    });
+
+    moveUpLeftButton.addEventListener("click", function() {
+      moveDiagonal("up-left");
+    });
+
+    moveUpRightButton.addEventListener("click", function() {
+      moveDiagonal("up-right");
+    });
+
+    moveDownLeftButton.addEventListener("click", function() {
+      moveDiagonal("down-left");
+    });
+
+    moveDownRightButton.addEventListener("click", function() {
+      moveDiagonal("down-right");
+    });
+
+    function moveDiagonal(direction) {
+      if (direction === "up-left") {
         moveUp(player1, stepSize);
-      } else if (keyCode === 83) {
-        // S key - move down
-        moveDown(player1, stepSize);
-      } else if (keyCode === 65) {
-        // A key - move left
         moveLeft(player1, stepSize);
-      } else if (keyCode === 68) {
-        // D key - move right
+      } else if (direction === "up-right") {
+        moveUp(player1, stepSize);
+        moveRight(player1, stepSize);
+      } else if (direction === "down-left") {
+        moveDown(player1, stepSize);
+        moveLeft(player1, stepSize);
+      } else if (direction === "down-right") {
+        moveDown(player1, stepSize);
         moveRight(player1, stepSize);
       }
     }
 
+    // Movement functions
     function moveUp(element, stepSize) {
       var topPos = parseInt(element.style.top) - stepSize;
       element.style.top = topPos + "px";
@@ -113,7 +156,3 @@
   </script>
 </body>
 </html>
-
-  <script>
-    // Show the pop-out explanation after 30 seconds
-    setTimeout(function() {</html> 
