@@ -1,103 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Fighting Game</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text in a Box Game</title>
   <style>
-    /* CSS Styles */
-
+    /* CSS styles for game interface */
+    /* Customize the styles as per your preference */
     body {
       background-color: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       font-family: Arial, sans-serif;
     }
 
     .game-container {
-      position: relative;
       width: 400px;
-      height: 400px;
-      border: 2px solid #333;
-      background-color: #fff;
-    }
-
-    .character {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      background-color: #333;
-      transition: 0.2s;
-    }
-
-    #player1 {
-      top: 50%;
-      left: 10px;
-      transform: translateY(-50%);
-    }
-
-    #player2 {
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-    }
-
-    .start-game {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #4CAF50;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .rules-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 300px;
+      margin: 0 auto;
       padding: 20px;
       background-color: #fff;
       border: 2px solid #333;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      z-index: 999;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    .rules-container h2 {
-      font-size: 24px;
-      margin-top: 0;
+    .question-container {
+      margin-bottom: 20px;
     }
 
-    .rules-container p {
-      font-size: 16px;
-      line-height: 1.4;
+    .question {
+      font-weight: bold;
       margin-bottom: 10px;
     }
 
-    .touch-controls {
-      display: none;
-      justify-content: center;
-      align-items: center;
-      margin-top: 20px;
+    .story-container {
+      font-size: 14px;
+      line-height: 1.5;
     }
 
-    .touch-button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 60px;
-      height: 60px;
-      margin: 0 10px;
-      background-color: #4CAF50;
+    .player-input {
+      width: 100%;
+      padding: 5px;
+    }
+
+    .submit-button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #333;
       color: #fff;
-      font-size: 20px;
-      border-radius: 50%;
       border: none;
       cursor: pointer;
     }
@@ -105,106 +50,86 @@
 </head>
 <body>
   <div class="game-container">
-    <div id="player1" class="character"></div>
-    <div id="player2" class="character"></div>
+    <div class="question-container">
+      <p class="question" id="question-text"></p>
+      <input type="text" class="player-input" id="player-input" />
+      <button class="submit-button" onclick="submitPlayerInput()">Submit</button>
+    </div>
+    <div class="story-container" id="story-text"></div>
   </div>
 
-  <button class="start-game" onclick="startGame()">Start Game</button>
-
-  <div id="rules-container" class="rules-container">
-    <h2>How to Play</h2>
-    <p>Player 1 (Left Square) Controls:</p>
-    <p>Swipe up, down, left, or right to move.</p>
-    <p>Player 2 (Right Square) Controls:</p>
-    <p>Use arrow keys to move.</p>
-    <button onclick="hideRules()">Got It!</button>
-  </div>
-
-  <div class="touch-controls">
-    <button class="touch-button" data-direction="up">&#8593;</button>
-    <button class="touch-button" data-direction="down">&#8595;</button>
-    <button class="touch-button" data-direction="left">&#8592;</button>
-    <button class="touch-button" data-direction="right">&#8594;</button>
-  </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script>
-    // JavaScript Code
+    // JavaScript code for game logic and ChatGPT integration
 
-    var player1 = document.getElementById("player1");
-    var player2 = document.getElementById("player2");
-    var stepSize = 10;
-    var gameStarted = false;
+    // Game state variables
+    let currentQuestionIndex = 0;
+    let story = "";
 
-    // Start Game
-    function startGame() {
-      gameStarted = true;
-      document.querySelector(".start-game").style.display = "none";
-      document.getElementById("rules-container").style.display = "block";
-      showTouchControls();
+    // Define the list of questions
+    const questions = [
+      "What is your name?",
+      "Where are you from?",
+      "What is your favorite color?",
+      "What is your superpower?"
+    ];
+
+    // Define the list of random questions
+    const randomQuestions = [
+      "What is your favorite food?",
+      "What is your most cherished possession?",
+      "If you could have one wish, what would you wish for?",
+      "What is your biggest fear?",
+      "What is your dream vacation destination?"
+    ];
+
+    // Game initialization
+    function initializeGame() {
+      showNextQuestion();
     }
 
-    // Hide Rules
-    function hideRules() {
-      document.getElementById("rules-container").style.display = "none";
-    }
-
-    // Show Touch Controls
-    function showTouchControls() {
-      document.querySelector(".touch-controls").style.display = "flex";
-    }
-
-    // Keyboard Controls
-    document.addEventListener("keydown", function(event) {
-      if (gameStarted) {
-        moveCharacter(event.keyCode);
+    // Show the next question
+    function showNextQuestion() {
+      let questionText;
+      if (currentQuestionIndex < questions.length) {
+        questionText = questions[currentQuestionIndex];
+      } else {
+        questionText = getRandomQuestion();
       }
-    });
-
-    // Touch Screen Controls
-    var touchButtons = document.querySelectorAll(".touch-button");
-
-    touchButtons.forEach(function(button) {
-      button.addEventListener("touchstart", function(event) {
-        event.preventDefault();
-        if (gameStarted) {
-          var direction = button.getAttribute("data-direction");
-          moveCharacter(direction);
-        }
-      });
-    });
-
-    function moveCharacter(direction) {
-      // Player 1 Movement (Swipe Controls)
-      if (direction === "up") {
-        moveUp(player1, stepSize);
-      } else if (direction === "down") {
-        moveDown(player1, stepSize);
-      } else if (direction === "left") {
-        moveLeft(player1, stepSize);
-      } else if (direction === "right") {
-        moveRight(player1, stepSize);
-      }
+      
+      const questionElement = document.getElementById("question-text");
+      questionElement.innerText = questionText;
+      currentQuestionIndex++;
     }
 
-    function moveUp(element, stepSize) {
-      var topPos = parseInt(element.style.top) - stepSize;
-      element.style.top = topPos + "px";
+    // Get a random question from the randomQuestions array
+    function getRandomQuestion() {
+      const randomIndex = Math.floor(Math.random() * randomQuestions.length);
+      return randomQuestions[randomIndex];
     }
 
-    function moveDown(element, stepSize) {
-      var topPos = parseInt(element.style.top) + stepSize;
-      element.style.top = topPos + "px";
+    // Submit player input
+    function submitPlayerInput() {
+      const playerInput = document.getElementById("player-input").value;
+      appendStory("Player: " + playerInput);
+      showNextQuestion();
     }
 
-    function moveLeft(element, stepSize) {
-      var leftPos = parseInt(element.style.left) - stepSize;
-      element.style.left = leftPos + "px";
+    // Append text to the story container
+    function appendStory(text) {
+      const storyContainer = document.getElementById("story-text");
+      storyContainer.innerText += "\n" + text;
     }
 
-    function moveRight(element, stepSize) {
-      var leftPos = parseInt(element.style.left) + stepSize;
-      element.style.left = leftPos + "px";
+    // Finish the game
+    function finishGame() {
+      const questionContainer = document.querySelector(".question-container");
+      questionContainer.style.display = "none";
+      appendStory("The End");
     }
+
+    // Start the game
+    initializeGame();
   </script>
 </body>
 </html>
