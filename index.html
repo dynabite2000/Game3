@@ -79,6 +79,28 @@
       line-height: 1.4;
       margin-bottom: 10px;
     }
+
+    .touch-controls {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .touch-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 60px;
+      height: 60px;
+      margin: 0 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      font-size: 20px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -94,10 +116,15 @@
     <p>Player 1 (Left Square) Controls:</p>
     <p>Swipe up, down, left, or right to move.</p>
     <p>Player 2 (Right Square) Controls:</p>
-    <p>Use the W, A, S, D keys to move.</p>
-    <p>Avoid colliding with the other square.</p>
-    <p>The square that touches the boundary loses.</p>
+    <p>Use arrow keys to move.</p>
     <button onclick="hideRules()">Got It!</button>
+  </div>
+
+  <div class="touch-controls">
+    <button class="touch-button" data-direction="up">&#8593;</button>
+    <button class="touch-button" data-direction="down">&#8595;</button>
+    <button class="touch-button" data-direction="left">&#8592;</button>
+    <button class="touch-button" data-direction="right">&#8594;</button>
   </div>
 
   <script>
@@ -110,11 +137,18 @@
     function startGame() {
       gameStarted = true;
       document.querySelector(".start-game").style.display = "none";
+      document.getElementById("rules-container").style.display = "block";
     }
 
     // Hide Rules
     function hideRules() {
       document.getElementById("rules-container").style.display = "none";
+      showTouchControls();
+    }
+
+    // Show Touch Controls
+    function showTouchControls() {
+      document.querySelector(".touch-controls").style.display = "flex";
     }
 
     // Keyboard Controls
@@ -172,3 +206,4 @@
   </script>
 </body>
 </html>
+ 
