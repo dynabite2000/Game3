@@ -6,6 +6,7 @@ var backgroundMusic = document.getElementById('backgroundMusic');
 
 var currentSituation = 0;
 var chosenOption = null;
+var clickCount = 0;
 
 var story = [
   "You wake up in a dark room. It feels cold and damp.",
@@ -13,35 +14,32 @@ var story = [
   "You enter a room filled with broken dolls and flickering lights.",
   "Suddenly, a figure jumps out from the shadows, startling you.",
   "Congratulations! You have survived the horror and emerged victorious!",
-  "You bravely fight back against the figure, using all your strength and willpower...",
-  "With a surge of adrenaline, you overpower the figure and escape its clutches!",
   "The figure overpowers you, its ferocity unmatched. You have met a gruesome fate."
 ];
 
 var options = [
   [
-    { text: "Look for a light switch", next: [0, 1, 2] },
-    { text: "Feel your way around the room", next: [0, 1, 3] },
-    { text: "Call out for help", next: [0, 1, 4] }
+    { text: "Look around", win: false },
+    { text: "Stay still", win: false },
+    { text: "Listen for any sounds", win: false }
   ],
   [
-    { text: "Follow the whispers", next: [1, 2, 5] },
-    { text: "Run in the opposite direction", next: [1, 2, 6] },
-    { text: "Stay rooted to the spot", next: [1, 2, 7] }
+    { text: "Follow the whispers", win: false },
+    { text: "Run in the opposite direction", win: false },
+    { text: "Stay rooted to the spot", win: false }
   ],
   [
-    { text: "Examine the dolls closely", next: [2, 3, 8] },
-    { text: "Ignore the dolls and search for an exit", next: [2, 3, 9] },
-    { text: "Knock the dolls over in frustration", next: [2, 3, 10] }
+    { text: "Examine the dolls closely", win: false },
+    { text: "Ignore the dolls and search for an exit", win: false },
+    { text: "Knock the dolls over in frustration", win: false }
   ],
   [
-    { text: "Fight back with all your strength", next: [3, 4, 11] },
-    { text: "Try to reason with the figure", next: [3, 4, 12] },
-    { text: "Run away as fast as you can", next: [3, 4, 13] }
+    { text: "Fight the figure", win: true },
+    { text: "Run for your life", win: false },
+    { text: "Hide in the shadows", win: false }
   ],
   [], // Winning situation
-  [], // Fight successful
-  []  // Fight unsuccessful
+  []  // Losing situation
 ];
 
 function displaySituation() {
@@ -69,13 +67,22 @@ function selectOption(option) {
 
 function submitAnswer() {
   if (chosenOption) {
+    clickCount++;
     processAnswer(chosenOption);
   }
 }
 
 function processAnswer(option) {
-  var nextSituation = option.next[Math.floor(Math.random() * option.next.length)];
-  currentSituation = nextSituation;
+  if (option.win) {
+    if (clickCount >= 15) {
+      currentSituation = 4; // Winning situation
+    } else {
+      currentSituation = 5; // Losing situation
+    }
+  } else {
+    currentSituation++;
+  }
+  
   displaySituation();
   chosenOption = null;
   submitButton.disabled = true;
