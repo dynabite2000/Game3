@@ -9,8 +9,10 @@
     <h1>Welcome to the Horror Game!</h1>
     <p id="story"></p>
     <p id="options"></p>
-    <input type="text" id="answerInput">
-    <button onclick="submitAnswer()">Submit</button>
+    <div id="inputContainer">
+      <input type="text" id="answerInput" placeholder="Enter your answer">
+      <button onclick="submitAnswer()">Submit</button>
+    </div>
   </div>
 
   <audio id="backgroundMusic" src="music.mp3" loop></audio>
