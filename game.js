@@ -11,11 +11,18 @@ var story = [
   "You wake up in a dark room. It feels cold and damp.",
   "As you walk through the corridor, you hear eerie whispers.",
   "You enter a room filled with broken dolls and flickering lights.",
-  "Suddenly, a figure jumps out from the shadows, startling you."
+  "Suddenly, a figure jumps out from the shadows, startling you.",
+  "You are paralyzed with fear as the figure reveals its sharp teeth and claws, lunging towards you...",
+  "The whispers grow louder and closer, overwhelming your senses...",
+  "The dolls come to life, their glassy eyes fixated on you as they advance menacingly...",
+  "You find yourself cornered by the figure, unable to escape its grasp..."
 ];
 
 var options = [
-  [],
+  [
+    { text: "Look around", answer: "look" },
+    { text: "Stay still", answer: "stay" }
+  ],
   [
     { text: "Investigate the whispers", answer: "investigate" },
     { text: "Run away", answer: "run away" }
@@ -27,7 +34,11 @@ var options = [
   [
     { text: "Fight the figure", answer: "fight" },
     { text: "Run for your life", answer: "run" }
-  ]
+  ],
+  [], // Dead end 1
+  [], // Dead end 2
+  [], // Dead end 3
+  []  // Dead end 4
 ];
 
 function displaySituation() {
@@ -60,6 +71,11 @@ function submitAnswer() {
 }
 
 function processAnswer(answer) {
+  if (currentSituation >= story.length - 1) {
+    gameOver();
+    return;
+  }
+
   if (answer === options[currentSituation][0].answer) {
     currentSituation++;
   }
@@ -72,6 +88,13 @@ function processAnswer(answer) {
 function nextSituation() {
   currentSituation++;
   displaySituation();
+}
+
+function gameOver() {
+  storyElement.textContent = "Game Over. You have met a gruesome fate.";
+  optionsElement.innerHTML = "";
+  submitButton.style.display = "none";
+  nextButton.style.display = "none";
 }
 
 // Play background music when the page loads
