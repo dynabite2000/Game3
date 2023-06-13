@@ -1,135 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Text in a Box Game</title>
-  <style>
-    /* CSS styles for game interface */
-    /* Customize the styles as per your preference */
-    body {
-      background-color: #f2f2f2;
-      font-family: Arial, sans-serif;
-    }
-
-    .game-container {
-      width: 400px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #fff;
-      border: 2px solid #333;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .question-container {
-      margin-bottom: 20px;
-    }
-
-    .question {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .story-container {
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .player-input {
-      width: 100%;
-      padding: 5px;
-    }
-
-    .submit-button {
-      margin-top: 10px;
-      padding: 5px 10px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-  </style>
+  <title>Horror Game</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-  <div class="game-container">
-    <div class="question-container">
-      <p class="question" id="question-text"></p>
-      <input type="text" class="player-input" id="player-input" />
-      <button class="submit-button" onclick="submitPlayerInput()">Submit</button>
-    </div>
-    <div class="story-container" id="story-text"></div>
+  <div class="container">
+    <h1>Welcome to the Horror Game!</h1>
+    <p id="story"></p>
+    <p id="options"></p>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script>
-    // JavaScript code for game logic and ChatGPT integration
-
-    // Game state variables
-    let currentQuestionIndex = 0;
-    let story = "";
-
-    // Define the list of questions
-    const questions = [
-      "What is your name?",
-      "Where are you from?",
-      "What is your favorite color?",
-      "What is your superpower?"
-    ];
-
-    // Define the list of random questions
-    const randomQuestions = [
-      "What is your favorite food?",
-      "What is your most cherished possession?",
-      "If you could have one wish, what would you wish for?",
-      "What is your biggest fear?",
-      "What is your dream vacation destination?"
-    ];
-
-    // Game initialization
-    function initializeGame() {
-      showNextQuestion();
-    }
-
-    // Show the next question
-    function showNextQuestion() {
-      let questionText;
-      if (currentQuestionIndex < questions.length) {
-        questionText = questions[currentQuestionIndex];
-      } else {
-        questionText = getRandomQuestion();
-      }
-      
-      const questionElement = document.getElementById("question-text");
-      questionElement.innerText = questionText;
-      currentQuestionIndex++;
-    }
-
-    // Get a random question from the randomQuestions array
-    function getRandomQuestion() {
-      const randomIndex = Math.floor(Math.random() * randomQuestions.length);
-      return randomQuestions[randomIndex];
-    }
-
-    // Submit player input
-    function submitPlayerInput() {
-      const playerInput = document.getElementById("player-input").value;
-      appendStory("Player: " + playerInput);
-      showNextQuestion();
-    }
-
-    // Append text to the story container
-    function appendStory(text) {
-      const storyContainer = document.getElementById("story-text");
-      storyContainer.innerText += "\n" + text;
-    }
-
-    // Finish the game
-    function finishGame() {
-      const questionContainer = document.querySelector(".question-container");
-      questionContainer.style.display = "none";
-      appendStory("The End");
-    }
-
-    // Start the game
-    initializeGame();
-  </script>
+  <script src="game.js"></script>
 </body>
 </html>
