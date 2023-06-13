@@ -20,20 +20,44 @@ var story = [
 
 var options = [
   [
-    { text: "Look around", answer: "look" },
-    { text: "Stay still", answer: "stay" }
+    { text: "Look around", questions: [
+      "You see a flickering light at the end of the room. What do you do?",
+      "You notice a strange noise coming from behind a door. What do you do?"
+    ]},
+    { text: "Stay still", questions: [
+      "You hear footsteps approaching. What do you do?",
+      "You feel a cold breeze. What do you do?"
+    ]}
   ],
   [
-    { text: "Investigate the whispers", answer: "investigate" },
-    { text: "Run away", answer: "run away" }
+    { text: "Investigate the whispers", questions: [
+      "You see a shadowy figure in the corner. What do you do?",
+      "You hear a disembodied voice whispering your name. What do you do?"
+    ]},
+    { text: "Run away", questions: [
+      "You come across a dead end. What do you do?",
+      "You find a hidden passage. What do you do?"
+    ]}
   ],
   [
-    { text: "Examine the dolls", answer: "examine" },
-    { text: "Leave the room", answer: "leave" }
+    { text: "Examine the dolls", questions: [
+      "One of the dolls starts moving. What do you do?",
+      "You find a note hidden among the dolls. What do you do?"
+    ]},
+    { text: "Leave the room", questions: [
+      "You encounter a locked door. What do you do?",
+      "You find a staircase leading down. What do you do?"
+    ]}
   ],
   [
-    { text: "Fight the figure", answer: "fight" },
-    { text: "Run for your life", answer: "run" }
+    { text: "Fight the figure", questions: [
+      "You grab a nearby weapon. What do you do next?",
+      "The figure lunges at you. How do you react?"
+    ]},
+    { text: "Run for your life", questions: [
+      "You sprint down the corridor. Where do you go?",
+      "You stumble upon a hidden room. What do you do?"
+    ]}
   ],
   [], // Winning situation
   [], // Fight successful
@@ -65,33 +89,19 @@ function selectOption(option) {
 
 function submitAnswer() {
   if (chosenOption) {
-    processAnswer(chosenOption.answer);
+    processAnswer(chosenOption);
   }
 }
 
-function processAnswer(answer) {
-  if (currentSituation >= story.length - 1) {
-    if (currentSituation === 4 && answer === "fight") {
-      var random = Math.random(); // Generate a random number between 0 and 1
-
-      if (random <= 0.55) {
-        gameWon();
-      } else {
-        gameLost();
-      }
-    } else {
-      gameLost();
-    }
-    return;
-  }
-
-  if (answer === options[currentSituation][0].answer) {
-    currentSituation++;
-  }
-
+function processAnswer(option) {
+  var questions = option.questions;
+  var randomIndex = Math.floor(Math.random() * questions.length);
+  storyElement.textContent = questions[randomIndex];
+  optionsElement.innerHTML = "";
+  submitButton.style.display = "none";
+  nextButton.style.display = "block";
   chosenOption = null;
   submitButton.disabled = true;
-  displaySituation();
 }
 
 function nextSituation() {
