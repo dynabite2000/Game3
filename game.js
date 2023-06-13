@@ -66,6 +66,8 @@ function displaySituation() {
   optionsElement.innerHTML = buttonsHTML;
   nextButton.style.display = 'none';
   submitButton.disabled = false;
+
+  updateInventory();
 }
 
 function selectOption(optionIndex) {
@@ -89,7 +91,7 @@ function processAnswer(option) {
   } else {
     currentSituation++;
   }
-  
+
   if (currentSituation === story.length - 2) {
     if (inventory.includes("Lucky Coin")) {
       gameLost = false;
@@ -97,19 +99,19 @@ function processAnswer(option) {
       gameLost = true;
     }
   }
-  
+
   // Check if the option adds an item to the inventory
   if (option.item) {
     inventory.push(option.item);
     updateInventory();
   }
-  
+
   displaySituation();
-  
+
   if (gameLost) {
     gameContainer.classList.add("game-lost");
   }
-  
+
   if (currentSituation === story.length - 1 || currentSituation === story.length) {
     submitButton.style.display = 'none';
     nextButton.style.display = 'none';
@@ -120,7 +122,7 @@ function nextSituation() {
   if (currentSituation === story.length - 1 && !gameLost) {
     gameContainer.classList.remove("game-lost");
   }
-  
+
   if (currentSituation === story.length) {
     restartGame();
   } else {
@@ -148,6 +150,12 @@ function updateInventory() {
     listItem.textContent = item;
     inventoryList.appendChild(listItem);
   });
+
+  if (inventory.length > 0) {
+    inventoryElement.style.display = 'block';
+  } else {
+    inventoryElement.style.display = 'none';
+  }
 }
 
 // Start the game
