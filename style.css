@@ -40,3 +40,16 @@ button {
   background-color: black;
   color: white;
 }
+#inventory {
+  margin-top: 20px;
+}
+
+#inventory-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+#inventory-list li {
+  margin-bottom: 5px;
+}
+
