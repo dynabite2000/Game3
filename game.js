@@ -50,6 +50,7 @@ function processAnswer(option) {
   // Check if the option adds an item to the inventory
   if (option.item) {
     inventory.push(option.item);
+    updateInventory();
   }
   
   displaySituation();
