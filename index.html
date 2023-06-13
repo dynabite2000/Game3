@@ -8,10 +8,11 @@
   <div class="container">
     <h1>Welcome to the Horror Game!</h1>
     <p id="story"></p>
-    <form id="optionsForm">
-      <div id="options"></div>
-      <input type="submit" value="Submit">
-    </form>
+    <div id="options"></div>
+    <div id="buttonContainer">
+      <button id="submitButton" onclick="submitAnswer()">Submit</button>
+      <button id="nextButton" onclick="nextSituation()" style="display: none;">Next</button>
+    </div>
   </div>
 
   <audio id="backgroundMusic" src="music.mp3" loop></audio>
