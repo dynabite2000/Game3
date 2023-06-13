@@ -3,18 +3,19 @@ var optionsElement = document.getElementById('options');
 var submitButton = document.getElementById('submitButton');
 var nextButton = document.getElementById('nextButton');
 var backgroundMusic = document.getElementById('backgroundMusic');
+var gameContainer = document.getElementById('gameContainer');
 
 var currentSituation = 0;
 var chosenOption = null;
 var clickCount = 0;
+var gameLost = false;
 
 var story = [
   "You wake up in a dark room. It feels cold and damp.",
   "As you walk through the corridor, you hear eerie whispers.",
   "You enter a room filled with broken dolls and flickering lights.",
   "Suddenly, a figure jumps out from the shadows, startling you.",
-  "Congratulations! You have survived the horror and emerged victorious!",
-  "The figure overpowers you, its ferocity unmatched. You have met a gruesome fate."
+  "Congratulations! You have survived the horror and emerged victorious!"
 ];
 
 var options = [
@@ -38,8 +39,7 @@ var options = [
     { text: "Run for your life", win: false },
     { text: "Hide in the shadows", win: false }
   ],
-  [], // Winning situation
-  []  // Losing situation
+  [] // Winning situation
 ];
 
 function displaySituation() {
@@ -74,18 +74,22 @@ function submitAnswer() {
 
 function processAnswer(option) {
   if (option.win) {
-    if (clickCount >= 15) {
-      currentSituation = 4; // Winning situation
-    } else {
-      currentSituation = 5; // Losing situation
-    }
+    currentSituation = 4; // Winning situation
   } else {
     currentSituation++;
+  }
+  
+  if (currentSituation === story.length - 1) {
+    gameLost = true;
   }
   
   displaySituation();
   chosenOption = null;
   submitButton.disabled = true;
+  
+  if (gameLost) {
+    gameContainer.classList.add("game-lost");
+  }
 }
 
 function nextSituation() {
@@ -94,13 +98,6 @@ function nextSituation() {
 }
 
 function gameWon() {
-  storyElement.textContent = story[currentSituation];
-  optionsElement.innerHTML = "";
-  submitButton.style.display = "none";
-  nextButton.style.display = "none";
-}
-
-function gameLost() {
   storyElement.textContent = story[currentSituation];
   optionsElement.innerHTML = "";
   submitButton.style.display = "none";
