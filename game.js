@@ -12,10 +12,10 @@ var story = [
   "As you walk through the corridor, you hear eerie whispers.",
   "You enter a room filled with broken dolls and flickering lights.",
   "Suddenly, a figure jumps out from the shadows, startling you.",
-  "You are paralyzed with fear as the figure reveals its sharp teeth and claws, lunging towards you...",
-  "The whispers grow louder and closer, overwhelming your senses...",
-  "The dolls come to life, their glassy eyes fixated on you as they advance menacingly...",
-  "You find yourself cornered by the figure, unable to escape its grasp..."
+  "Congratulations! You have survived the horror and emerged victorious!",
+  "You bravely fight back against the figure, using all your strength and willpower...",
+  "With a surge of adrenaline, you overpower the figure and escape its clutches!",
+  "The figure overpowers you, its ferocity unmatched. You have met a gruesome fate."
 ];
 
 var options = [
@@ -35,10 +35,9 @@ var options = [
     { text: "Fight the figure", answer: "fight" },
     { text: "Run for your life", answer: "run" }
   ],
-  [], // Dead end 1
-  [], // Dead end 2
-  [], // Dead end 3
-  []  // Dead end 4
+  [], // Winning situation
+  [], // Fight successful
+  []  // Fight unsuccessful
 ];
 
 function displaySituation() {
@@ -72,7 +71,17 @@ function submitAnswer() {
 
 function processAnswer(answer) {
   if (currentSituation >= story.length - 1) {
-    gameOver();
+    if (currentSituation === 4 && answer === "fight") {
+      var random = Math.random(); // Generate a random number between 0 and 1
+
+      if (random <= 0.55) {
+        gameWon();
+      } else {
+        gameLost();
+      }
+    } else {
+      gameLost();
+    }
     return;
   }
 
@@ -90,8 +99,15 @@ function nextSituation() {
   displaySituation();
 }
 
-function gameOver() {
-  storyElement.textContent = "Game Over. You have met a gruesome fate.";
+function gameWon() {
+  storyElement.textContent = story[currentSituation];
+  optionsElement.innerHTML = "";
+  submitButton.style.display = "none";
+  nextButton.style.display = "none";
+}
+
+function gameLost() {
+  storyElement.textContent = story[currentSituation];
   optionsElement.innerHTML = "";
   submitButton.style.display = "none";
   nextButton.style.display = "none";
