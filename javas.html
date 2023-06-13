@@ -1,6 +1,6 @@
-// Define your game variables and story content
 var storyElement = document.getElementById('story');
 var optionsElement = document.getElementById('options');
+var answerInputElement = document.getElementById('answerInput');
 
 var currentSituation = 0;
 
@@ -12,29 +12,47 @@ var story = [
 ];
 
 var options = [
-  ["Look around", "Stay still"],
+  [],
   ["Investigate the whispers", "Run away"],
   ["Examine the dolls", "Leave the room"],
   ["Fight the figure", "Run for your life"]
 ];
 
-// Function to display the current situation and options
+var answers = [
+  "",
+  "investigate",
+  "examine",
+  "fight"
+];
+
 function displaySituation() {
   storyElement.textContent = story[currentSituation];
 
-  var buttonsHTML = "";
-  for (var i = 0; i < options[currentSituation].length; i++) {
-    buttonsHTML += "<button onclick='selectOption(" + i + ")'>" + options[currentSituation][i] + "</button>";
+  if (options[currentSituation].length > 0) {
+    var buttonsHTML = "";
+    for (var i = 0; i < options[currentSituation].length; i++) {
+      buttonsHTML += "<button onclick='selectOption(" + i + ")'>" + options[currentSituation][i] + "</button>";
+    }
+    optionsElement.innerHTML = buttonsHTML;
+  } else {
+    optionsElement.innerHTML = "";
   }
-
-  optionsElement.innerHTML = buttonsHTML;
 }
 
-// Function to handle option selection
 function selectOption(option) {
   currentSituation++;
   displaySituation();
 }
 
-// Start the game
+function submitAnswer() {
+  var answer = answerInputElement.value.toLowerCase();
+
+  if (answer === answers[currentSituation]) {
+    currentSituation++;
+  }
+
+  answerInputElement.value = "";
+  displaySituation();
+}
+
 displaySituation();
