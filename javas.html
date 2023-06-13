@@ -1,6 +1,7 @@
 var storyElement = document.getElementById('story');
 var optionsElement = document.getElementById('options');
 var answerInputElement = document.getElementById('answerInput');
+var backgroundMusic = document.getElementById('backgroundMusic');
 
 var currentSituation = 0;
 
@@ -54,5 +55,10 @@ function submitAnswer() {
   answerInputElement.value = "";
   displaySituation();
 }
+
+// Play background music when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+  backgroundMusic.play();
+});
 
 displaySituation();
