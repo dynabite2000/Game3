@@ -1,6 +1,6 @@
 var storyElement = document.getElementById('story');
 var optionsElement = document.getElementById('options');
-var answerInputElement = document.getElementById('answerInput');
+var inputContainerElement = document.getElementById('inputContainer');
 var backgroundMusic = document.getElementById('backgroundMusic');
 
 var currentSituation = 0;
@@ -14,45 +14,53 @@ var story = [
 
 var options = [
   [],
-  ["Investigate the whispers", "Run away"],
-  ["Examine the dolls", "Leave the room"],
-  ["Fight the figure", "Run for your life"]
-];
-
-var answers = [
-  "",
-  "investigate",
-  "examine",
-  "fight"
+  [
+    { text: "Investigate the whispers", answer: "investigate" },
+    { text: "Run away", answer: "run away" }
+  ],
+  [
+    { text: "Examine the dolls", answer: "examine" },
+    { text: "Leave the room", answer: "leave" }
+  ],
+  [
+    { text: "Fight the figure", answer: "fight" },
+    { text: "Run for your life", answer: "run" }
+  ]
 ];
 
 function displaySituation() {
   storyElement.textContent = story[currentSituation];
 
+  optionsElement.innerHTML = "";
   if (options[currentSituation].length > 0) {
-    var buttonsHTML = "";
+    var optionsHTML = "";
     for (var i = 0; i < options[currentSituation].length; i++) {
-      buttonsHTML += "<button onclick='selectOption(" + i + ")'>" + options[currentSituation][i] + "</button>";
+      optionsHTML += "<button onclick='selectOption(" + i + ")'>" + options[currentSituation][i].text + "</button>";
     }
-    optionsElement.innerHTML = buttonsHTML;
+    optionsElement.innerHTML = optionsHTML;
+    inputContainerElement.style.display = "none";
   } else {
-    optionsElement.innerHTML = "";
+    inputContainerElement.style.display = "block";
   }
 }
 
 function selectOption(option) {
-  currentSituation++;
-  displaySituation();
+  var answer = options[currentSituation][option].answer;
+  processAnswer(answer);
 }
 
 function submitAnswer() {
-  var answer = answerInputElement.value.toLowerCase();
+  var answerInput = document.getElementById('answerInput');
+  var answer = answerInput.value.toLowerCase();
+  answerInput.value = "";
+  processAnswer(answer);
+}
 
-  if (answer === answers[currentSituation]) {
+function processAnswer(answer) {
+  if (answer === options[currentSituation][0].answer) {
     currentSituation++;
   }
 
-  answerInputElement.value = "";
   displaySituation();
 }
 
