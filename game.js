@@ -1,9 +1,11 @@
 var storyElement = document.getElementById('story');
 var optionsElement = document.getElementById('options');
-var optionsForm = document.getElementById('optionsForm');
+var submitButton = document.getElementById('submitButton');
+var nextButton = document.getElementById('nextButton');
 var backgroundMusic = document.getElementById('backgroundMusic');
 
 var currentSituation = 0;
+var chosenOption = null;
 
 var story = [
   "You wake up in a dark room. It feels cold and damp.",
@@ -35,18 +37,25 @@ function displaySituation() {
   if (options[currentSituation].length > 0) {
     var optionsHTML = "";
     for (var i = 0; i < options[currentSituation].length; i++) {
-      optionsHTML += `<label><input type="radio" name="option" value="${options[currentSituation][i].answer}">${options[currentSituation][i].text}</label>`;
+      optionsHTML += `<button onclick="selectOption(${i})">${options[currentSituation][i].text}</button>`;
     }
     optionsElement.innerHTML = optionsHTML;
+    submitButton.style.display = "block";
+    nextButton.style.display = "none";
+  } else {
+    submitButton.style.display = "none";
+    nextButton.style.display = "block";
   }
 }
 
-function submitOptions(event) {
-  event.preventDefault();
-  var selectedOption = document.querySelector('input[name="option"]:checked');
-  if (selectedOption) {
-    var answer = selectedOption.value;
-    processAnswer(answer);
+function selectOption(option) {
+  chosenOption = options[currentSituation][option];
+  submitButton.disabled = false;
+}
+
+function submitAnswer() {
+  if (chosenOption) {
+    processAnswer(chosenOption.answer);
   }
 }
 
@@ -55,6 +64,13 @@ function processAnswer(answer) {
     currentSituation++;
   }
 
+  chosenOption = null;
+  submitButton.disabled = true;
+  displaySituation();
+}
+
+function nextSituation() {
+  currentSituation++;
   displaySituation();
 }
 
@@ -62,7 +78,5 @@ function processAnswer(answer) {
 document.addEventListener('DOMContentLoaded', function() {
   backgroundMusic.play();
 });
-
-optionsForm.addEventListener('submit', submitOptions);
 
 displaySituation();
