@@ -1,0 +1,40 @@
+// Define your game variables and story content
+var storyElement = document.getElementById('story');
+var optionsElement = document.getElementById('options');
+
+var currentSituation = 0;
+
+var story = [
+  "You wake up in a dark room. It feels cold and damp.",
+  "As you walk through the corridor, you hear eerie whispers.",
+  "You enter a room filled with broken dolls and flickering lights.",
+  "Suddenly, a figure jumps out from the shadows, startling you."
+];
+
+var options = [
+  ["Look around", "Stay still"],
+  ["Investigate the whispers", "Run away"],
+  ["Examine the dolls", "Leave the room"],
+  ["Fight the figure", "Run for your life"]
+];
+
+// Function to display the current situation and options
+function displaySituation() {
+  storyElement.textContent = story[currentSituation];
+
+  var buttonsHTML = "";
+  for (var i = 0; i < options[currentSituation].length; i++) {
+    buttonsHTML += "<button onclick='selectOption(" + i + ")'>" + options[currentSituation][i] + "</button>";
+  }
+
+  optionsElement.innerHTML = buttonsHTML;
+}
+
+// Function to handle option selection
+function selectOption(option) {
+  currentSituation++;
+  displaySituation();
+}
+
+// Start the game
+displaySituation();
