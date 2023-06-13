@@ -1,3 +1,23 @@
+var storyElement = document.getElementById('story');
+var optionsElement = document.getElementById('options');
+var submitButton = document.getElementById('submitButton');
+var nextButton = document.getElementById('nextButton');
+var inventoryElement = document.getElementById('inventory');
+var gameContainer = document.querySelector('.container');
+
+var currentSituation = 0;
+var chosenOption = null;
+var gameLost = false;
+
+var story = [
+  "You wake up in a dark room. It feels cold and damp.",
+  "As you walk through the corridor, you hear eerie whispers.",
+  "You enter a room filled with broken dolls and flickering lights.",
+  "Suddenly, a figure jumps out from the shadows, startling you.",
+  "Congratulations! You have successfully defeated the figure and won the game!",
+  "You have lost the game. Try again!"
+];
+
 var options = [
   [
     { text: "Look around", win: false },
@@ -27,10 +47,41 @@ var options = [
     { text: "Use a wooden stake from your bag", win: false },
     { text: "Use the lucky coin from your pocket", win: Math.random() < 0.55 }
   ],
-  [] // Winning situation
+  [], // Winning situation
+  [] // Losing situation
 ];
 
 var inventory = [];
+
+function displaySituation() {
+  storyElement.textContent = story[currentSituation];
+
+  var buttonsHTML = "";
+  var currentOptions = options[currentSituation];
+  
+  for (var i = 0; i < currentOptions.length; i++) {
+    buttonsHTML += '<button onclick="selectOption(' + i + ')">' + currentOptions[i].text + '</button>';
+  }
+
+  optionsElement.innerHTML = buttonsHTML;
+  nextButton.style.display = 'none';
+  submitButton.disabled = false;
+}
+
+function selectOption(optionIndex) {
+  chosenOption = options[currentSituation][optionIndex];
+  submitButton.disabled = true;
+  nextButton.style.display = 'inline';
+}
+
+function submitAnswer() {
+  if (chosenOption) {
+    processAnswer(chosenOption);
+    chosenOption = null;
+    submitButton.disabled = true;
+    nextButton.style.display = 'inline';
+  }
+}
 
 function processAnswer(option) {
   if (option.win) {
@@ -39,7 +90,7 @@ function processAnswer(option) {
     currentSituation++;
   }
   
-  if (currentSituation === story.length - 1) {
+  if (currentSituation === story.length - 2) {
     if (inventory.includes("Lucky Coin")) {
       gameLost = false;
     } else {
@@ -54,10 +105,51 @@ function processAnswer(option) {
   }
   
   displaySituation();
-  chosenOption = null;
-  submitButton.disabled = true;
   
   if (gameLost) {
     gameContainer.classList.add("game-lost");
   }
+  
+  if (currentSituation === story.length - 1 || currentSituation === story.length) {
+    submitButton.style.display = 'none';
+    nextButton.style.display = 'none';
+  }
 }
+
+function nextSituation() {
+  if (currentSituation === story.length - 1 && !gameLost) {
+    gameContainer.classList.remove("game-lost");
+  }
+  
+  if (currentSituation === story.length) {
+    restartGame();
+  } else {
+    currentSituation++;
+    displaySituation();
+  }
+}
+
+function restartGame() {
+  currentSituation = 0;
+  chosenOption = null;
+  gameLost = false;
+  inventory = [];
+  updateInventory();
+  displaySituation();
+  submitButton.style.display = 'inline';
+}
+
+function updateInventory() {
+  var inventoryList = document.getElementById('inventory-list');
+  inventoryList.innerHTML = '';
+
+  inventory.forEach(function (item) {
+    var listItem = document.createElement('li');
+    listItem.textContent = item;
+    inventoryList.appendChild(listItem);
+  });
+}
+
+// Start the game
+displaySituation();
+updateInventory();
