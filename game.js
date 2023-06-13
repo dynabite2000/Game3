@@ -1,76 +1,36 @@
-var storyElement = document.getElementById('story');
-var optionsElement = document.getElementById('options');
-var submitButton = document.getElementById('submitButton');
-var nextButton = document.getElementById('nextButton');
-var backgroundMusic = document.getElementById('backgroundMusic');
-var gameContainer = document.getElementById('gameContainer');
-
-var currentSituation = 0;
-var chosenOption = null;
-var clickCount = 0;
-var gameLost = false;
-
-var story = [
-  "You wake up in a dark room. It feels cold and damp.",
-  "As you walk through the corridor, you hear eerie whispers.",
-  "You enter a room filled with broken dolls and flickering lights.",
-  "Suddenly, a figure jumps out from the shadows, startling you.",
-  "Congratulations! You have survived the horror and emerged victorious!"
-];
-
 var options = [
   [
     { text: "Look around", win: false },
     { text: "Stay still", win: false },
-    { text: "Listen for any sounds", win: false }
+    { text: "Listen for any sounds", win: false },
+    { text: "Light a match for illumination", win: false }
   ],
   [
     { text: "Follow the whispers", win: false },
     { text: "Run in the opposite direction", win: false },
-    { text: "Stay rooted to the spot", win: false }
+    { text: "Stay rooted to the spot", win: false },
+    { text: "Whisper back and try to communicate", win: false }
   ],
   [
     { text: "Examine the dolls closely", win: false },
     { text: "Ignore the dolls and search for an exit", win: false },
-    { text: "Knock the dolls over in frustration", win: false }
+    { text: "Knock the dolls over in frustration", win: false },
+    { text: "Collect one of the dolls for protection", win: false },
+    { text: "Use a nearby candle as a light source", win: false }
   ],
   [
-    { text: "Fight the figure", win: true },
+    { text: "Fight the figure", win: Math.random() < 0.55 },
     { text: "Run for your life", win: false },
-    { text: "Hide in the shadows", win: false }
+    { text: "Hide in the shadows", win: false },
+    { text: "Confront the figure and demand answers", win: false },
+    { text: "Use a silver crucifix from your pocket", win: false },
+    { text: "Use a wooden stake from your bag", win: false },
+    { text: "Use the lucky coin from your pocket", win: Math.random() < 0.55 }
   ],
   [] // Winning situation
 ];
 
-function displaySituation() {
-  storyElement.textContent = story[currentSituation];
-
-  optionsElement.innerHTML = "";
-  if (options[currentSituation].length > 0) {
-    var optionsHTML = "";
-    for (var i = 0; i < options[currentSituation].length; i++) {
-      optionsHTML += `<button onclick="selectOption(${i})">${options[currentSituation][i].text}</button>`;
-    }
-    optionsElement.innerHTML = optionsHTML;
-    submitButton.style.display = "block";
-    nextButton.style.display = "none";
-  } else {
-    submitButton.style.display = "none";
-    nextButton.style.display = "block";
-  }
-}
-
-function selectOption(option) {
-  chosenOption = options[currentSituation][option];
-  submitButton.disabled = false;
-}
-
-function submitAnswer() {
-  if (chosenOption) {
-    clickCount++;
-    processAnswer(chosenOption);
-  }
-}
+var inventory = [];
 
 function processAnswer(option) {
   if (option.win) {
@@ -80,7 +40,16 @@ function processAnswer(option) {
   }
   
   if (currentSituation === story.length - 1) {
-    gameLost = true;
+    if (inventory.includes("Lucky Coin")) {
+      gameLost = false;
+    } else {
+      gameLost = true;
+    }
+  }
+  
+  // Check if the option adds an item to the inventory
+  if (option.item) {
+    inventory.push(option.item);
   }
   
   displaySituation();
@@ -91,22 +60,3 @@ function processAnswer(option) {
     gameContainer.classList.add("game-lost");
   }
 }
-
-function nextSituation() {
-  currentSituation++;
-  displaySituation();
-}
-
-function gameWon() {
-  storyElement.textContent = story[currentSituation];
-  optionsElement.innerHTML = "";
-  submitButton.style.display = "none";
-  nextButton.style.display = "none";
-}
-
-// Play background music when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-  backgroundMusic.play();
-});
-
-displaySituation();
