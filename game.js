@@ -1,6 +1,6 @@
 var storyElement = document.getElementById('story');
 var optionsElement = document.getElementById('options');
-var inputContainerElement = document.getElementById('inputContainer');
+var optionsForm = document.getElementById('optionsForm');
 var backgroundMusic = document.getElementById('backgroundMusic');
 
 var currentSituation = 0;
@@ -35,25 +35,19 @@ function displaySituation() {
   if (options[currentSituation].length > 0) {
     var optionsHTML = "";
     for (var i = 0; i < options[currentSituation].length; i++) {
-      optionsHTML += "<button onclick='selectOption(" + i + ")'>" + options[currentSituation][i].text + "</button>";
+      optionsHTML += `<label><input type="radio" name="option" value="${options[currentSituation][i].answer}">${options[currentSituation][i].text}</label>`;
     }
     optionsElement.innerHTML = optionsHTML;
-    inputContainerElement.style.display = "none";
-  } else {
-    inputContainerElement.style.display = "block";
   }
 }
 
-function selectOption(option) {
-  var answer = options[currentSituation][option].answer;
-  processAnswer(answer);
-}
-
-function submitAnswer() {
-  var answerInput = document.getElementById('answerInput');
-  var answer = answerInput.value.toLowerCase();
-  answerInput.value = "";
-  processAnswer(answer);
+function submitOptions(event) {
+  event.preventDefault();
+  var selectedOption = document.querySelector('input[name="option"]:checked');
+  if (selectedOption) {
+    var answer = selectedOption.value;
+    processAnswer(answer);
+  }
 }
 
 function processAnswer(answer) {
@@ -68,5 +62,7 @@ function processAnswer(answer) {
 document.addEventListener('DOMContentLoaded', function() {
   backgroundMusic.play();
 });
+
+optionsForm.addEventListener('submit', submitOptions);
 
 displaySituation();
