@@ -20,44 +20,24 @@ var story = [
 
 var options = [
   [
-    { text: "Look around", questions: [
-      "You see a flickering light at the end of the room. What do you do?",
-      "You notice a strange noise coming from behind a door. What do you do?"
-    ]},
-    { text: "Stay still", questions: [
-      "You hear footsteps approaching. What do you do?",
-      "You feel a cold breeze. What do you do?"
-    ]}
+    { text: "Look for a light switch", next: [0, 1, 2] },
+    { text: "Feel your way around the room", next: [0, 1, 3] },
+    { text: "Call out for help", next: [0, 1, 4] }
   ],
   [
-    { text: "Investigate the whispers", questions: [
-      "You see a shadowy figure in the corner. What do you do?",
-      "You hear a disembodied voice whispering your name. What do you do?"
-    ]},
-    { text: "Run away", questions: [
-      "You come across a dead end. What do you do?",
-      "You find a hidden passage. What do you do?"
-    ]}
+    { text: "Follow the whispers", next: [1, 2, 5] },
+    { text: "Run in the opposite direction", next: [1, 2, 6] },
+    { text: "Stay rooted to the spot", next: [1, 2, 7] }
   ],
   [
-    { text: "Examine the dolls", questions: [
-      "One of the dolls starts moving. What do you do?",
-      "You find a note hidden among the dolls. What do you do?"
-    ]},
-    { text: "Leave the room", questions: [
-      "You encounter a locked door. What do you do?",
-      "You find a staircase leading down. What do you do?"
-    ]}
+    { text: "Examine the dolls closely", next: [2, 3, 8] },
+    { text: "Ignore the dolls and search for an exit", next: [2, 3, 9] },
+    { text: "Knock the dolls over in frustration", next: [2, 3, 10] }
   ],
   [
-    { text: "Fight the figure", questions: [
-      "You grab a nearby weapon. What do you do next?",
-      "The figure lunges at you. How do you react?"
-    ]},
-    { text: "Run for your life", questions: [
-      "You sprint down the corridor. Where do you go?",
-      "You stumble upon a hidden room. What do you do?"
-    ]}
+    { text: "Fight back with all your strength", next: [3, 4, 11] },
+    { text: "Try to reason with the figure", next: [3, 4, 12] },
+    { text: "Run away as fast as you can", next: [3, 4, 13] }
   ],
   [], // Winning situation
   [], // Fight successful
@@ -94,12 +74,9 @@ function submitAnswer() {
 }
 
 function processAnswer(option) {
-  var questions = option.questions;
-  var randomIndex = Math.floor(Math.random() * questions.length);
-  storyElement.textContent = questions[randomIndex];
-  optionsElement.innerHTML = "";
-  submitButton.style.display = "none";
-  nextButton.style.display = "block";
+  var nextSituation = option.next[Math.floor(Math.random() * option.next.length)];
+  currentSituation = nextSituation;
+  displaySituation();
   chosenOption = null;
   submitButton.disabled = true;
 }
