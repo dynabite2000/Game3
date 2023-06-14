@@ -20,13 +20,14 @@ var options = [
     { text: "Follow the whispers", win: false },
     { text: "Run in the opposite direction", win: false },
     { text: "Stay rooted to the spot", win: false },
-    { text: "Whisper back and try to communicate", win: false }
+    { text: "Whisper back and try to communicate", win: false },
+    { text: "Collect a Lucky Coin", item: "Lucky Coin", win: false }
   ],
   [
     { text: "Examine the dolls closely", win: false },
     { text: "Ignore the dolls and search for an exit", win: false },
     { text: "Knock the dolls over in frustration", win: false },
-    { text: "Collect one of the dolls for protection", win: false },
+    { text: "Collect a Wooden Stake", item: "Wooden Stake", win: false },
     { text: "Use a nearby candle as a light source", win: false }
   ],
   [
@@ -34,9 +35,8 @@ var options = [
     { text: "Run for your life", win: false },
     { text: "Hide in the shadows", win: false },
     { text: "Confront the figure and demand answers", win: false },
-    { text: "Use a silver crucifix from your pocket", win: false },
-    { text: "Use a wooden stake from your bag", win: false },
-    { text: "Use the lucky coin from your pocket", win: Math.random() < 0.55 }
+    { text: "Use a Silver Crucifix", item: "Silver Crucifix", win: false },
+    { text: "Use the Lucky Coin", item: "Lucky Coin", win: Math.random() < 0.55 }
   ],
   [], // Winning situation
   [] // Losing situation
@@ -70,7 +70,10 @@ function displaySituation() {
   var currentOptions = options[currentSituation];
 
   for (var i = 0; i < currentOptions.length; i++) {
-    buttonsHTML += '<button onclick="selectOption(' + i + ')">' + currentOptions[i].text + '</button>';
+    var option = currentOptions[i];
+    var disabled = option.item && !inventory.includes(option.item) ? 'disabled' : '';
+
+    buttonsHTML += '<button onclick="selectOption(' + i + ')" ' + disabled + '>' + option.text + '</button>';
   }
 
   optionsElement.innerHTML = buttonsHTML;
