@@ -149,7 +149,7 @@ function updateInventory() {
 
   inventory.forEach(function (item) {
     var listItem = document.createElement('li');
-    listItem.textContent = item;
+    listItem.textContent = getItemName(item); // Call getItemName function to get the name of the item
     inventoryList.appendChild(listItem);
   });
 
@@ -158,6 +158,19 @@ function updateInventory() {
   } else {
     inventoryElement.style.display = 'none';
   }
+}
+
+// Function to get the name of an item
+function getItemName(item) {
+  // Map item names based on item key
+  var itemNames = {
+    'Lucky Coin': 'Lucky Coin',
+    'Wooden Stake': 'Wooden Stake',
+    'Silver Crucifix': 'Silver Crucifix'
+    // Add more item names if needed
+  };
+
+  return itemNames[item] || 'Unknown Item';
 }
 
 // Function to start the game
