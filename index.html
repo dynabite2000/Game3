@@ -16,7 +16,7 @@
     <div id="buttonContainer">
       <button id="startButton" onclick="startGame()">Start</button>
       <button id="submitButton" onclick="selectOption()" style="display: none;">Submit</button>
-      <button id="nextButton" onclick="processAnswer(chosenOption)" style="display: none;">Next</button>
+      <button id="nextButton" onclick="nextSituation()" style="display: none;">Next</button>
       <button id="restartButton" onclick="restartGame()" style="display: none;">Restart</button>
     </div>
   </div>
@@ -24,42 +24,6 @@
   <audio id="backgroundMusic" src="music.mp3" loop></audio>
   <script src="game.js"></script>
   <script>
-    // ...existing code...
-
-    // Function to process the chosen option
-    function processAnswer(option) {
-      // ...existing code...
-
-      if (option.win && (option.item === "Lucky Coin" || option.item === "Silver Crucifix")) {
-        currentSituation = 4; // Winning situation
-      } else {
-        currentSituation = 5; // Losing situation
-      }
-
-      if (currentSituation === story.length - 2) {
-        if (inventory.includes("Lucky Coin")) {
-          gameLost = false;
-        } else {
-          gameLost = true;
-        }
-      }
-
-      displaySituation();
-
-      if (gameLost) {
-        gameContainer.classList.add("game-lost");
-      }
-
-      if (currentSituation === story.length - 1 || currentSituation === story.length) {
-        submitButton.style.display = 'none';
-        nextButton.style.display = 'none';
-
-        if (currentSituation === story.length - 1) {
-          restartButton.style.display = 'inline';
-        }
-      }
-    }
-
     // ...existing code...
   </script>
 </body>
