@@ -31,12 +31,12 @@ var options = [
     { text: "Use a nearby candle as a light source", win: false }
   ],
   [
-    { text: "Fight the figure", win: Math.random() < 0.55 },
+    { text: "Fight the figure", win: false },
     { text: "Run for your life", win: false },
     { text: "Hide in the shadows", win: false },
     { text: "Confront the figure and demand answers", win: false },
     { text: "Use a Silver Crucifix", item: "Silver Crucifix", win: false },
-    { text: "Use the Lucky Coin", item: "Lucky Coin", win: Math.random() < 0.55 }
+    { text: "Use the Lucky Coin", item: "Lucky Coin", win: false }
   ],
   [], // Winning situation
   [] // Losing situation
@@ -118,7 +118,7 @@ function processAnswer(option) {
   if (option.win) {
     currentSituation = 4; // Winning situation
   } else {
-    currentSituation++;
+    currentSituation = 5; // Losing situation
   }
 
   if (currentSituation === story.length - 2) {
