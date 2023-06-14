@@ -174,12 +174,19 @@ function restartGame() {
 // Function to update the inventory
 function updateInventory() {
   var inventoryList = document.getElementById('inventory-list');
+  var inventoryText = document.getElementById('inventory-text');
   inventoryList.innerHTML = "";
 
   for (var i = 0; i < inventory.length; i++) {
     var listItem = document.createElement("li");
     listItem.textContent = inventory[i];
     inventoryList.appendChild(listItem);
+  }
+
+  if (inventory.length > 0) {
+    inventoryText.textContent = "Items collected:";
+  } else {
+    inventoryText.textContent = "";
   }
 }
 
