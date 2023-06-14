@@ -117,6 +117,19 @@ function processAnswer(option) {
     nextButton.style.display = 'none';
   }
 }
+// ...existing code...
+
+function restartGame() {
+  currentSituation = 0;
+  chosenOption = null;
+  gameLost = false;
+  inventory = [];
+  updateInventory();
+  displaySituation();
+  submitButton.style.display = 'inline';
+}
+
+// ...existing code...
 
 function nextSituation() {
   if (currentSituation === story.length - 1 && !gameLost) {
