@@ -6,7 +6,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Html Horror Game</h1>
+    <h1>Horror Game</h1>
     <div id="inventory">
       <h2>Inventory</h2>
       <ul id="inventory-list"></ul>
@@ -15,8 +15,8 @@
     <div id="options"></div>
     <div id="buttonContainer">
       <button id="startButton" onclick="startGame()">Start</button>
-      <button id="submitButton" onclick="submitAnswer()" style="display: none;">Submit</button>
-      <button id="nextButton" onclick="nextSituation()" style="display: none;">Next</button>
+      <button id="submitButton" onclick="selectOption()" style="display: none;">Submit</button>
+      <button id="nextButton" onclick="processAnswer(chosenOption)" style="display: none;">Next</button>
       <button id="restartButton" onclick="restartGame()" style="display: none;">Restart</button>
     </div>
   </div>
@@ -30,10 +30,10 @@
     function processAnswer(option) {
       // ...existing code...
 
-      if (option.win) {
+      if (option.win && (option.item === "Lucky Coin" || option.item === "Silver Crucifix")) {
         currentSituation = 4; // Winning situation
       } else {
-        currentSituation++;
+        currentSituation = 5; // Losing situation
       }
 
       if (currentSituation === story.length - 2) {
