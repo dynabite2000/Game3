@@ -20,26 +20,19 @@ h1 {
   margin-top: 20px;
 }
 
-#inputContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#buttonContainer {
   margin-top: 20px;
-}
-
-#answerInput {
-  padding: 8px;
-  margin-right: 10px;
-  width: 200px;
 }
 
 button {
   padding: 8px 16px;
 }
+
 .game-lost {
   background-color: black;
   color: white;
 }
+
 #inventory {
   margin-top: 20px;
 }
@@ -52,4 +45,3 @@ button {
 #inventory-list li {
   margin-bottom: 5px;
 }
-
