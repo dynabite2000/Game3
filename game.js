@@ -5,7 +5,21 @@ var story = [
   "You enter a room filled with broken dolls and flickering lights.",
   "Suddenly, a figure jumps out from the shadows, startling you.",
   "Congratulations! You have successfully defeated the figure and won the game!",
-  "You have lost the game. Try again!"
+  "You have lost the game. Try again!",
+  "You find yourself in a dusty library with shelves full of ancient books.",
+  "A mysterious key catches your eye on a small table.",
+  "The room is filled with mirrors reflecting distorted images.",
+  "You encounter a riddle written on the wall.",
+  "A locked chest stands in the center of the room.",
+  "You step into a hidden chamber with an ominous atmosphere.",
+  "You enter a room with a ticking clock on the wall.",
+  "A trapdoor suddenly opens beneath your feet.",
+  "You come across a shrine with strange symbols.",
+  "A ghostly apparition appears in front of you.",
+  "You find yourself in a maze of twisting corridors.",
+  "A painting on the wall starts dripping blood.",
+  "You stumble upon a room full of ancient artifacts.",
+  "A gust of wind slams the door shut behind you."
 ];
 
 // Empty array to store the options for each situation
@@ -36,11 +50,101 @@ var options = [
     { text: "Hide in the shadows", win: false },
     { text: "Confront the figure and demand answers", win: false },
     { text: "Use a Silver Crucifix", item: "Silver Crucifix", win: false },
-    { text: "Use the Lucky Coin", item: "Lucky Coin", win: false },
-    { text: "Use the Wooden Stake", item: "Wooden Stake", win: false }
+    { text: "Use the Lucky Coin", item: "Lucky Coin", win: true },
+    { text: "Use the Wooden Stake", item: "Wooden Stake", win: true }
   ],
   [], // Winning situation
-  [] // Losing situation
+  [], // Losing situation
+  [
+    { text: "Inspect the books for clues", win: false },
+    { text: "Check the drawers of the desk", win: false },
+    { text: "Pull a random book from the shelf", win: false },
+    { text: "Take the mysterious key", item: "Mysterious Key", win: false }
+  ],
+  [
+    { text: "Touch one of the mirrors", win: false },
+    { text: "Search for hidden switches", win: false },
+    { text: "Break the mirrors", win: false },
+    { text: "Collect a Crystal Shard", item: "Crystal Shard", win: false },
+    { text: "Use a Mirror Shard", item: "Mirror Shard", win: false }
+  ],
+  [
+    { text: "Attempt to solve the riddle", win: false },
+    { text: "Ignore the riddle and search elsewhere", win: false },
+    { text: "Recite a cryptic phrase aloud", win: false },
+    { text: "Collect a Riddle Scroll", item: "Riddle Scroll", win: false },
+    { text: "Use the Quill Pen", item: "Quill Pen", win: false }
+  ],
+  [
+    { text: "Try to open the locked chest", win: false },
+    { text: "Look for a keyhole in the chest", win: false },
+    { text: "Inspect the surrounding area", win: false },
+    { text: "Collect a Rusty Key", item: "Rusty Key", win: false },
+    { text: "Use the Mysterious Key", item: "Mysterious Key", win: false }
+  ],
+  [
+    { text: "Explore the chamber", win: false },
+    { text: "Check for hidden passages", win: false },
+    { text: "Inspect the peculiar markings", win: false },
+    { text: "Collect a Crystal Orb", item: "Crystal Orb", win: false },
+    { text: "Use a Magic Wand", item: "Magic Wand", win: false }
+  ],
+  [
+    { text: "Try to fix the clock mechanism", win: false },
+    { text: "Search the room for a hidden key", win: false },
+    { text: "Smash the clock to find something inside", win: false },
+    { text: "Collect a Pocket Watch", item: "Pocket Watch", win: false },
+    { text: "Use the Ticking Key", item: "Ticking Key", win: false }
+  ],
+  [
+    { text: "Grab onto the ledge and climb back up", win: false },
+    { text: "Examine the trapdoor for any mechanisms", win: false },
+    { text: "Jump into the darkness below", win: false },
+    { text: "Collect a Grappling Hook", item: "Grappling Hook", win: false },
+    { text: "Use a Rope", item: "Rope", win: false }
+  ],
+  [
+    { text: "Pray to the shrine", win: false },
+    { text: "Study the symbols closely", win: false },
+    { text: "Light the candles around the shrine", win: false },
+    { text: "Collect a Sacred Amulet", item: "Sacred Amulet", win: false },
+    { text: "Use a Holy Symbol", item: "Holy Symbol", win: false }
+  ],
+  [
+    { text: "Approach the apparition calmly", win: false },
+    { text: "Run away from the ghost", win: false },
+    { text: "Try to communicate with the spirit", win: false },
+    { text: "Collect a Spirit Bottle", item: "Spirit Bottle", win: false },
+    { text: "Use the Ghost Whisperer", item: "Ghost Whisperer", win: false }
+  ],
+  [
+    { text: "Choose a direction and start walking", win: false },
+    { text: "Leave breadcrumbs to mark your path", win: false },
+    { text: "Scream for help", win: false },
+    { text: "Collect a Map", item: "Map", win: false },
+    { text: "Use a Compass", item: "Compass", win: false }
+  ],
+  [
+    { text: "Investigate the painting further", win: false },
+    { text: "Cover the painting to stop the dripping", win: false },
+    { text: "Leave the room immediately", win: false },
+    { text: "Collect a Blood-Soaked Cloth", item: "Blood-Soaked Cloth", win: false },
+    { text: "Use the Dripping Paintbrush", item: "Dripping Paintbrush", win: false }
+  ],
+  [
+    { text: "Inspect the artifacts for any clues", win: false },
+    { text: "Search for a hidden compartment", win: false },
+    { text: "Arrange the artifacts in a specific order", win: false },
+    { text: "Collect an Ancient Relic", item: "Ancient Relic", win: false },
+    { text: "Use an Enchanted Scroll", item: "Enchanted Scroll", win: false }
+  ],
+  [
+    { text: "Try to force the door open", win: false },
+    { text: "Look for an alternative exit", win: false },
+    { text: "Investigate the source of the gust of wind", win: false },
+    { text: "Collect a Wind Catcher", item: "Wind Catcher", win: false },
+    { text: "Use the Wind Whisperer", item: "Wind Whisperer", win: false }
+  ]
 ];
 
 // Empty array to store the player's inventory
@@ -103,51 +207,22 @@ function selectOption(optionIndex) {
   submitButton.disabled = true;
   nextButton.style.display = 'inline';
 
-  // Check if the option adds an item to the inventory
-  if (chosenOption.item) {
-    inventory.push(chosenOption.item);
-    updateInventory();
-  }
-}
-
-// Function to process the chosen option
-function processAnswer(option) {
-  var nextButton = document.getElementById('nextButton');
-  var restartButton = document.getElementById('restartButton');
-  var gameContainer = document.querySelector('.container');
-
-  if (option.win) {
-    currentSituation = 4; // Winning situation
-  } else {
-    currentSituation = 5; // Losing situation
-  }
-
-  if (currentSituation === story.length - 2) {
-    if (inventory.includes("Lucky Coin") && inventory.includes("Wooden Stake")) {
-      gameLost = false;
-    } else {
-      gameLost = true;
-    }
+  // Check if the chosen option leads to winning or losing
+  if (chosenOption.win) {
+    currentSituation = story.length - 2; // Winning situation index
+  } else if (currentSituation !== story.length - 1) {
+    currentSituation = story.length - 1; // Losing situation index
+    gameLost = true;
   }
 
   displaySituation();
-
-  if (gameLost) {
-    gameContainer.classList.add("game-lost");
-  }
-
-  if (currentSituation === story.length - 1 || currentSituation === story.length) {
-    submitButton.style.display = 'none';
-    nextButton.style.display = 'none';
-    restartButton.style.display = 'inline';
-  }
 }
 
 // Function to go to the next situation
 function nextSituation() {
   currentSituation++;
   chosenOption = null;
-
+  gameLost = false;
   displaySituation();
 }
 
@@ -155,45 +230,22 @@ function nextSituation() {
 function restartGame() {
   currentSituation = 0;
   chosenOption = null;
-  inventory = [];
   gameLost = false;
-
-  var gameContainer = document.querySelector('.container');
-  var submitButton = document.getElementById('submitButton');
-  var nextButton = document.getElementById('nextButton');
-  var restartButton = document.getElementById('restartButton');
-
-  gameContainer.classList.remove("game-lost");
-  submitButton.style.display = 'inline';
-  nextButton.style.display = 'none';
-  restartButton.style.display = 'none';
-
+  inventory = [];
   displaySituation();
 }
 
 // Function to update the inventory
 function updateInventory() {
-  var inventoryList = document.getElementById('inventory-list');
-  var inventoryText = document.getElementById('inventory-text');
-  inventoryList.innerHTML = "";
-
-  for (var i = 0; i < inventory.length; i++) {
-    var listItem = document.createElement("li");
-    listItem.textContent = inventory[i];
-    inventoryList.appendChild(listItem);
-  }
+  var inventoryElement = document.getElementById('inventory');
+  var inventoryHTML = "";
 
   if (inventory.length > 0) {
-    inventoryText.textContent = "Items collected:";
-  } else {
-    inventoryText.textContent = "";
+    inventoryHTML = "<strong>Inventory:</strong> ";
+    inventoryHTML += inventory.join(", ");
   }
+
+  inventoryElement.innerHTML = inventoryHTML;
 }
 
-// Function to start the game
-function startGame() {
-  var startButton = document.getElementById('startButton');
-  startButton.style.display = 'none';
-
-  displaySituation();
-}
+displaySituation();
