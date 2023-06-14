@@ -36,7 +36,8 @@ var options = [
     { text: "Hide in the shadows", win: false },
     { text: "Confront the figure and demand answers", win: false },
     { text: "Use a Silver Crucifix", item: "Silver Crucifix", win: false },
-    { text: "Use the Lucky Coin", item: "Lucky Coin", win: false }
+    { text: "Use the Lucky Coin", item: "Lucky Coin", win: false },
+    { text: "Use the Wooden Stake", item: "Wooden Stake", win: false }
   ],
   [], // Winning situation
   [] // Losing situation
@@ -122,7 +123,7 @@ function processAnswer(option) {
   }
 
   if (currentSituation === story.length - 2) {
-    if (inventory.includes("Lucky Coin")) {
+    if (inventory.includes("Lucky Coin") && inventory.includes("Wooden Stake")) {
       gameLost = false;
     } else {
       gameLost = true;
@@ -142,80 +143,50 @@ function processAnswer(option) {
   }
 }
 
-// Function to update the inventory display
-function updateInventory() {
-  var inventoryList = document.getElementById('inventory-list');
-  inventoryList.innerHTML = '';
+// Function to go to the next situation
+function nextSituation() {
+  currentSituation++;
+  chosenOption = null;
 
-  inventory.forEach(function (item) {
-    var listItem = document.createElement('li');
-    listItem.textContent = getItemName(item); // Call getItemName function to get the name of the item
-    inventoryList.appendChild(listItem);
-  });
-
-  if (inventory.length > 0) {
-    inventoryElement.style.display = 'block';
-  } else {
-    inventoryElement.style.display = 'none';
-  }
+  displaySituation();
 }
 
-// Function to get the name of an item
-function getItemName(item) {
-  // Map item names based on item key
-  var itemNames = {
-    'Lucky Coin': 'Lucky Coin',
-    'Wooden Stake': 'Wooden Stake',
-    'Silver Crucifix': 'Silver Crucifix'
-    // Add more item names if needed
-  };
+// Function to restart the game
+function restartGame() {
+  currentSituation = 0;
+  chosenOption = null;
+  inventory = [];
+  gameLost = false;
 
-  return itemNames[item] || 'Unknown Item';
+  var gameContainer = document.querySelector('.container');
+  var submitButton = document.getElementById('submitButton');
+  var nextButton = document.getElementById('nextButton');
+  var restartButton = document.getElementById('restartButton');
+
+  gameContainer.classList.remove("game-lost");
+  submitButton.style.display = 'inline';
+  nextButton.style.display = 'none';
+  restartButton.style.display = 'none';
+
+  displaySituation();
+}
+
+// Function to update the inventory
+function updateInventory() {
+  var inventoryList = document.getElementById('inventory-list');
+  inventoryList.innerHTML = "";
+
+  for (var i = 0; i < inventory.length; i++) {
+    var listItem = document.createElement("li");
+    listItem.textContent = inventory[i];
+    inventoryList.appendChild(listItem);
+  }
 }
 
 // Function to start the game
 function startGame() {
   var startButton = document.getElementById('startButton');
-  var gameContainer = document.querySelector('.container');
-
   startButton.style.display = 'none';
-  gameContainer.classList.remove("game-lost");
+
   displaySituation();
 }
-
-// Function to move to the next situation
-function nextSituation() {
-  var nextButton = document.getElementById('nextButton');
-  var gameContainer = document.querySelector('.container');
-
-  if (currentSituation === story.length - 1 && !gameLost) {
-    gameContainer.classList.remove("game-lost");
-  }
-
-  if (currentSituation === story.length) {
-    restartGame();
-  } else {
-    currentSituation++;
-    displaySituation();
-  }
-}
-
-// Function to restart the game
-function restartGame() {
-  var submitButton = document.getElementById('submitButton');
-  var restartButton = document.getElementById('restartButton');
-  var gameContainer = document.querySelector('.container');
-
-  currentSituation = 0;
-  chosenOption = null;
-  gameLost = false;
-  inventory = [];
-  updateInventory();
-  displaySituation();
-  submitButton.style.display = 'inline';
-  restartButton.style.display = 'none';
-  gameContainer.classList.remove("game-lost");
-}
-
-// Start the game
-updateInventory();
