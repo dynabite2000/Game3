@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Horror Game</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>Game</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>Html Horror Game</h1>
-    <div id="inventory">
-      <h2>Inventory</h2>
-      <ul id="inventoryList"></ul>
-    </div>
-    <p id="story"></p>
+    <div id="story"></div>
     <div id="options"></div>
-    <div id="buttonContainer">
-      <button id="submitButton" onclick="submitAnswer()">Submit</button>
-      <button id="nextButton" onclick="nextSituation()" style="display: none;">Next</button>
-      <button id="restartButton" onclick="restartGame()">Restart</button>
+    <div id="inventory" style="display: none;">
+      <h2>Inventory:</h2>
+      <ul id="inventory-list"></ul>
     </div>
+    <button id="startButton" onclick="startGame()">Start</button>
+    <button id="submitButton" onclick="submitAnswer()" style="display: none;">Submit</button>
+    <button id="nextButton" onclick="nextSituation()" style="display: none;">Next</button>
+    <button id="restartButton" onclick="restartGame()" style="display: none;">Restart</button>
   </div>
 
-  <audio id="backgroundMusic" src="music.mp3" loop></audio>
   <script src="game.js"></script>
 </body>
 </html>
