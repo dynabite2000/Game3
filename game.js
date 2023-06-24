@@ -45,12 +45,14 @@ function showSituation(situationIndex) {
   
   // Display choices for the current situation
   situation.choices.forEach(function(choice) {
-    var button = document.createElement("button");
-    button.textContent = choice.text;
-    button.addEventListener("click", function() {
-      selectChoice(choice, situationIndex);
-    });
-    optionsElement.appendChild(button);
+    if (!inventory.includes(choice.collect)) {
+      var button = document.createElement("button");
+      button.textContent = choice.text;
+      button.addEventListener("click", function() {
+        selectChoice(choice, situationIndex);
+      });
+      optionsElement.appendChild(button);
+    }
   });
 }
 
@@ -79,6 +81,7 @@ function selectChoice(choice, situationIndex) {
   
   // Display the next situation
   showSituation(nextSituation);
+  showSubmitButton();
 }
 
 // Function to update the inventory list
@@ -97,7 +100,8 @@ function winGame() {
   var storyElement = document.getElementById("story");
   storyElement.textContent = "Congratulations! You have successfully collected all the items and won the game!";
   document.getElementById("options").innerHTML = "";
-  document.getElementById("restartButton").style.display = "block";
+  hideSubmitButton();
+  disableChoices();
 }
 
 // Function to handle losing the game
@@ -105,12 +109,26 @@ function loseGame() {
   var storyElement = document.getElementById("story");
   storyElement.textContent = "You have lost the game. Try again!";
   document.getElementById("options").innerHTML = "";
-  document.getElementById("restartButton").style.display = "block";
+  hideSubmitButton();
+  disableChoices();
 }
 
-// Function to restart the game
-function restartGame() {
-  inventory = [];
-  updateInventory();
-  startGame();
+// Function to show the submit button
+function showSubmitButton() {
+  var submitButton = document.getElementById("submitButton");
+  submitButton.style.display = "block";
+}
+
+// Function to hide the submit button
+function hideSubmitButton() {
+  var submitButton = document.getElementById("submitButton");
+  submitButton.style.display = "none";
+}
+
+// Function to disable choices
+function disableChoices() {
+  var buttons = document.getElementsByTagName("button");
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = true;
+  }
 }
