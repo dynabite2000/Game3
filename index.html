@@ -1,29 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Quest for the Enchanted Amulet</title>
-  <style>
-    /* Your CSS styles here */
-  </style>
+  <title>Quest for the Enchanted Amulet - Multiple Choice</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-  <div id="game-container">
+  <div class="container">
     <h1>Quest for the Enchanted Amulet</h1>
-    <p id="story"></p>
-    <p id="options"></p>
-    <textarea id="user-input"></textarea>
-    <div id="buttonContainer">
-      <button id="submitButton" onclick="handleUserInput()">Submit</button>
-      <button id="restartButton" onclick="restartGame()" style="display: none;">Restart</button>
-    </div>
+    <div id="story"></div>
+    <div id="options"></div>
     <div id="inventory" style="display: none;">
       <h2>Inventory</h2>
       <ul id="inventory-list"></ul>
     </div>
+    <div id="buttonContainer">
+      <button id="startButton" onclick="startGame()">Start</button>
+      <button id="restartButton" onclick="restartGame()" style="display: none;">Restart</button>
+    </div>
   </div>
 
-  <script>
-    // JavaScript code here
-  </script>
+  <script src="game.js"></script>
 </body>
 </html>
